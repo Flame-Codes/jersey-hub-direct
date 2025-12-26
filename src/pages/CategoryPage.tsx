@@ -13,6 +13,7 @@ import BackToTop from '@/components/BackToTop';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types/product';
+import { getJerseyImage } from '@/assets/jerseys';
 
 const CategoryPage = () => {
   const { name } = useParams();
@@ -37,13 +38,18 @@ const CategoryPage = () => {
         const data = await response.json();
         setAllCategories(data.categories);
         
-        const filtered = data.products.filter((p: Product) => {
-          const matchesCategory = p.category.toLowerCase() === categoryName.toLowerCase();
-          const matchesSearch = searchQuery
-            ? p.name.toLowerCase().includes(searchQuery.toLowerCase())
-            : true;
-          return matchesCategory && matchesSearch;
-        });
+        const filtered = data.products
+          .filter((p: Product) => {
+            const matchesCategory = p.category.toLowerCase() === categoryName.toLowerCase();
+            const matchesSearch = searchQuery
+              ? p.name.toLowerCase().includes(searchQuery.toLowerCase())
+              : true;
+            return matchesCategory && matchesSearch;
+          })
+          .map((p: Product) => ({
+            ...p,
+            image: getJerseyImage(p.id, p.image),
+          }));
         
         setProducts(filtered);
       } catch (error) {
