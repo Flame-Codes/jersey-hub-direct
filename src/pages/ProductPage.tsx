@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { Share2, Minus, Plus, ChevronLeft, ChevronRight, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { Minus, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import Header from '@/components/Header';
 import CategoryDrawer from '@/components/CategoryDrawer';
 import Footer from '@/components/Footer';
@@ -265,33 +265,28 @@ const ProductPage = () => {
               </div>
 
               {/* Price */}
-              <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-bold text-primary">
-                  ৳{discountedPrice.toLocaleString()}
-                </span>
-                {product.discount > 0 && (
-                  <span className="text-lg text-muted-foreground line-through">
-                    ৳{product.price.toLocaleString()}
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">Price</p>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="text-2xl font-bold text-foreground">
+                    {discountedPrice.toLocaleString()} BDT
                   </span>
-                )}
+                  {product.discount > 0 && (
+                    <>
+                      <span className="text-lg text-muted-foreground line-through">
+                        {product.price.toLocaleString()} BDT
+                      </span>
+                      <span className="rounded-full bg-foreground text-background px-3 py-1 text-sm font-semibold">
+                        Save {(product.price - discountedPrice).toLocaleString()} BDT
+                      </span>
+                    </>
+                  )}
+                </div>
               </div>
-
-              {/* Stock Status */}
-              <div className={cn(
-                "badge-stock inline-flex",
-                product.stock ? "in-stock" : "out-of-stock"
-              )}>
-                {product.stock ? "✓ In Stock" : "✗ Out of Stock"}
-              </div>
-
-              {/* Description */}
-              <p className="text-muted-foreground leading-relaxed">
-                {product.description}
-              </p>
 
               {/* Size Selector */}
               <div className="space-y-3">
-                <label className="text-sm font-semibold text-foreground">Select Size</label>
+                <label className="text-sm font-semibold text-foreground">Size</label>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((size) => (
                     <button
@@ -299,10 +294,10 @@ const ProductPage = () => {
                       type="button"
                       onClick={() => setSelectedSize(size)}
                       className={cn(
-                        "min-w-[48px] rounded-xl border-2 px-4 py-2.5 text-sm font-semibold transition-all",
+                        "min-w-[56px] rounded-full border-2 px-5 py-2.5 text-sm font-semibold transition-all",
                         selectedSize === size
-                          ? "border-primary bg-primary text-primary-foreground shadow-lg"
-                          : "border-border text-foreground hover:border-primary/50 hover:bg-secondary"
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border text-foreground hover:border-foreground/50 bg-background"
                       )}
                     >
                       {size}
@@ -312,73 +307,62 @@ const ProductPage = () => {
               </div>
 
               {/* Quantity Selector */}
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-foreground">Quantity</label>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 bg-secondary rounded-xl p-1">
-                    <button
-                      type="button"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-background transition-colors text-foreground"
-                    >
-                      <Minus className="h-4 w-4" strokeWidth={2} />
-                    </button>
-                    <span className="w-10 text-center text-lg font-semibold text-foreground">
-                      {quantity}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-background transition-colors text-foreground"
-                    >
-                      <Plus className="h-4 w-4" strokeWidth={2} />
-                    </button>
-                  </div>
-                  <span className="text-muted-foreground">
-                    Total: <span className="font-bold text-foreground">৳{totalPrice.toLocaleString()}</span>
+              <div className="flex items-center gap-4 pt-2">
+                <div className="flex items-center rounded-full border-2 border-border">
+                  <button
+                    type="button"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-12 h-12 flex items-center justify-center hover:bg-secondary transition-colors text-foreground rounded-l-full"
+                  >
+                    <Minus className="h-5 w-5" strokeWidth={2} />
+                  </button>
+                  <span className="w-12 text-center text-lg font-semibold text-foreground border-x-2 border-border">
+                    {quantity}
                   </span>
+                  <button
+                    type="button"
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-12 h-12 flex items-center justify-center hover:bg-secondary transition-colors text-foreground rounded-r-full"
+                  >
+                    <Plus className="h-5 w-5" strokeWidth={2} />
+                  </button>
                 </div>
-              </div>
-
-              {/* Desktop Actions */}
-              <div className="hidden md:flex gap-3 pt-4">
-                <Button
+                <button
                   type="button"
                   onClick={handleAddToCart}
-                  size="lg"
-                  variant="secondary"
-                  className="flex-1 gap-2"
                   disabled={!product.stock}
+                  className="flex-1 rounded-full border-2 border-foreground bg-background py-3.5 text-sm font-bold uppercase tracking-wide text-foreground disabled:opacity-50 active:scale-[0.98] transition-all duration-200 touch-manipulation hover:bg-secondary"
                 >
-                  <ShoppingCart className="h-5 w-5" strokeWidth={2} />
-                  Add to Cart
-                </Button>
-                <Button
-                  type="button"
-                  onClick={handleOrder}
-                  size="lg"
-                  className="flex-1 btn-primary gap-2"
-                  disabled={!product.stock}
-                >
-                  <ShoppingBag className="h-5 w-5" strokeWidth={2} />
-                  Order Now
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  onClick={handleShare}
-                  className="px-4"
-                >
-                  <Share2 className="h-5 w-5" strokeWidth={2} />
-                </Button>
+                  ADD TO CART
+                </button>
               </div>
 
-              {/* COD Notice */}
-              <div className="rounded-xl bg-success/10 border border-success/20 p-4 text-center">
-                <p className="text-sm text-success font-medium">
-                  💵 Cash on Delivery • 🚚 Fast Delivery • 📞 WhatsApp Support
-                </p>
+              {/* Buy Now Button */}
+              <button
+                type="button"
+                onClick={handleOrder}
+                disabled={!product.stock}
+                className="w-full rounded-full bg-foreground py-4 text-base font-bold uppercase tracking-wide text-background disabled:opacity-50 active:scale-[0.98] transition-all duration-200 touch-manipulation hover:bg-foreground/90"
+              >
+                BUY NOW
+              </button>
+
+              {/* Product Features */}
+              <div className="space-y-2 pt-4 border-t border-border">
+                <p className="text-foreground">. Player edition Logo</p>
+                <p className="text-foreground">. Mash Fabric 170+ GSM</p>
+                <p className="text-foreground">. 100% Premium</p>
+                <p className="text-foreground">. High Quality Fabrics</p>
+                <p className="text-foreground">. Cash On Delivery Available</p>
+              </div>
+
+              {/* Size Guide */}
+              <div className="space-y-2 pt-4 border-t border-border">
+                <p className="font-semibold text-foreground">Size :</p>
+                <p className="text-muted-foreground">M = Height 26 inches, Chest 38</p>
+                <p className="text-muted-foreground">L = Height 27 inches, Chest 40</p>
+                <p className="text-muted-foreground">XL = Height 28 inches, Chest 42</p>
+                <p className="text-muted-foreground">2xl = Height 30 inches, Chest 44</p>
               </div>
             </div>
           </div>
@@ -409,8 +393,8 @@ const ProductPage = () => {
                       <h3 className="mt-1 font-medium text-foreground line-clamp-1 text-sm">
                         {rp.name}
                       </h3>
-                      <p className="mt-1 text-primary font-bold">
-                        ৳{(rp.price - (rp.price * rp.discount) / 100).toLocaleString()}
+                      <p className="mt-1 text-foreground font-bold">
+                        BDT {(rp.price - (rp.price * rp.discount) / 100).toLocaleString()}
                       </p>
                     </div>
                   </Link>
@@ -422,38 +406,46 @@ const ProductPage = () => {
 
         {/* Mobile Sticky Bottom Bar */}
         <div className="md:hidden sticky-bottom-bar p-4 z-50">
-          <div className="flex gap-2">
-            <Button
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center rounded-full border-2 border-border bg-background">
+                <button
+                  type="button"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-10 h-10 flex items-center justify-center text-foreground"
+                >
+                  <Minus className="h-4 w-4" strokeWidth={2} />
+                </button>
+                <span className="w-8 text-center text-sm font-semibold text-foreground">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-10 h-10 flex items-center justify-center text-foreground"
+                >
+                  <Plus className="h-4 w-4" strokeWidth={2} />
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={!product.stock}
+                className="flex-1 rounded-full border-2 border-foreground bg-background py-3 text-sm font-bold uppercase tracking-wide text-foreground disabled:opacity-50 active:scale-[0.98] transition-all touch-manipulation"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+              >
+                ADD TO CART
+              </button>
+            </div>
+            <button
               type="button"
-              variant="secondary"
-              size="lg"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAddToCart(e);
-              }}
-              className="flex-1 gap-2 active:scale-[0.98] transition-transform touch-manipulation select-none"
+              onClick={handleOrder}
               disabled={!product.stock}
+              className="w-full rounded-full bg-foreground py-3.5 text-sm font-bold uppercase tracking-wide text-background disabled:opacity-50 active:scale-[0.98] transition-all touch-manipulation"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              <ShoppingCart className="h-5 w-5 shrink-0" strokeWidth={2} />
-              Add to Cart
-            </Button>
-            <Button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleOrder(e);
-              }}
-              size="lg"
-              className="flex-1 btn-primary gap-2 active:scale-[0.98] transition-transform touch-manipulation select-none"
-              disabled={!product.stock}
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              <ShoppingBag className="h-5 w-5 shrink-0" strokeWidth={2} />
-              Order • ৳{totalPrice.toLocaleString()}
-            </Button>
+              BUY NOW
+            </button>
           </div>
         </div>
 
