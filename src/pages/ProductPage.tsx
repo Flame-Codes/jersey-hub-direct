@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Product } from '@/types/product';
 import { cn } from '@/lib/utils';
+import { getJerseyImage } from '@/assets/jerseys';
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -32,13 +33,22 @@ const ProductPage = () => {
         const foundProduct = data.products.find((p: Product) => p.id === id);
         
         if (foundProduct) {
-          setProduct(foundProduct);
+          // Apply local image
+          const productWithLocalImage = {
+            ...foundProduct,
+            image: getJerseyImage(foundProduct.id, foundProduct.image),
+          };
+          setProduct(productWithLocalImage);
           setSelectedSize(foundProduct.sizes[0] || '');
           
-          // Get related products from same category
+          // Get related products from same category with local images
           const related = data.products
             .filter((p: Product) => p.category === foundProduct.category && p.id !== foundProduct.id)
-            .slice(0, 4);
+            .slice(0, 4)
+            .map((p: Product) => ({
+              ...p,
+              image: getJerseyImage(p.id, p.image),
+            }));
           setRelatedProducts(related);
         }
       } catch (error) {

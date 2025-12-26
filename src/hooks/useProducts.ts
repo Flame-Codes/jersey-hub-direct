@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Product, ProductsData, FilterState } from '@/types/product';
+import { getJerseyImage } from '@/assets/jerseys';
 
 export const useProducts = () => {
   const [data, setData] = useState<ProductsData | null>(null);
@@ -18,7 +19,17 @@ export const useProducts = () => {
         const response = await fetch('/products.json');
         if (!response.ok) throw new Error('Failed to fetch products');
         const jsonData = await response.json();
-        setData(jsonData);
+        
+        // Apply local images to products
+        const productsWithLocalImages = jsonData.products.map((product: Product) => ({
+          ...product,
+          image: getJerseyImage(product.id, product.image),
+        }));
+        
+        setData({
+          ...jsonData,
+          products: productsWithLocalImages,
+        });
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
