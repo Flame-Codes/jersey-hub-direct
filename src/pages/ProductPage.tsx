@@ -421,27 +421,37 @@ const ProductPage = () => {
         </main>
 
         {/* Mobile Sticky Bottom Bar */}
-        <div className="md:hidden sticky-bottom-bar p-4">
+        <div className="md:hidden sticky-bottom-bar p-4 z-50">
           <div className="flex gap-2">
             <Button
               type="button"
               variant="secondary"
               size="lg"
-              onClick={handleAddToCart}
-              className="flex-1 gap-2"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleAddToCart(e);
+              }}
+              className="flex-1 gap-2 active:scale-[0.98] transition-transform touch-manipulation select-none"
               disabled={!product.stock}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              <ShoppingCart className="h-5 w-5" strokeWidth={2} />
+              <ShoppingCart className="h-5 w-5 shrink-0" strokeWidth={2} />
               Add to Cart
             </Button>
             <Button
               type="button"
-              onClick={handleOrder}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleOrder(e);
+              }}
               size="lg"
-              className="flex-1 btn-primary gap-2"
+              className="flex-1 btn-primary gap-2 active:scale-[0.98] transition-transform touch-manipulation select-none"
               disabled={!product.stock}
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              <ShoppingBag className="h-5 w-5" strokeWidth={2} />
+              <ShoppingBag className="h-5 w-5 shrink-0" strokeWidth={2} />
               Order • ৳{totalPrice.toLocaleString()}
             </Button>
           </div>

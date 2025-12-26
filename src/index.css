@@ -113,9 +113,20 @@
     box-shadow: var(--shadow-xl);
   }
 
+  /* Ensure buttons inside cards are always clickable */
+  .card-interactive button,
+  .card-interactive a {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+  }
+
   .btn-primary {
     @apply bg-primary text-primary-foreground font-semibold rounded-xl px-6 py-3 transition-all duration-200;
     box-shadow: 0 4px 14px 0 hsl(var(--primary) / 0.3);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
   }
 
   .btn-primary:hover {
@@ -124,7 +135,14 @@
   }
 
   .btn-primary:active {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.98);
+  }
+  
+  /* Touch-friendly button base styles */
+  button, 
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .badge-discount {

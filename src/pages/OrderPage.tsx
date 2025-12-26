@@ -381,7 +381,7 @@ const OrderPage = () => {
               {/* Desktop Submit Button */}
               <Button
                 type="submit"
-                className="hidden md:flex w-full mt-6 btn-primary gap-2"
+                className="hidden md:flex w-full mt-6 btn-primary gap-2 active:scale-[0.98] transition-transform touch-manipulation"
                 size="lg"
                 disabled={isSubmitting}
               >
@@ -392,7 +392,7 @@ const OrderPage = () => {
                   </>
                 ) : (
                   <>
-                    <Send className="h-5 w-5" />
+                    <Send className="h-5 w-5 shrink-0" />
                     Place Order • ৳{totalPrice.toLocaleString()}
                   </>
                 )}
@@ -402,13 +402,18 @@ const OrderPage = () => {
         </main>
 
         {/* Mobile Sticky Bottom Bar */}
-        <div className="md:hidden sticky-bottom-bar p-4">
+        <div className="md:hidden sticky-bottom-bar p-4 z-50">
           <Button
             type="button"
-            onClick={handleSubmit}
-            className="w-full btn-primary gap-2"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleSubmit(e as any);
+            }}
+            className="w-full btn-primary gap-2 active:scale-[0.98] transition-transform touch-manipulation select-none"
             size="lg"
             disabled={isSubmitting}
+            style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             {isSubmitting ? (
               <>
@@ -417,7 +422,7 @@ const OrderPage = () => {
               </>
             ) : (
               <>
-                <Send className="h-5 w-5" />
+                <Send className="h-5 w-5 shrink-0" />
                 Place Order • ৳{totalPrice.toLocaleString()}
               </>
             )}
