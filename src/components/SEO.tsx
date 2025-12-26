@@ -10,13 +10,13 @@ interface SEOProps {
 }
 
 const SEO = ({
-  title = 'JerseyStore - Premium Football Jerseys | Authentic Quality',
+  title = 'JerseyHub - Premium Football Jerseys | Authentic Quality',
   description = 'Shop authentic football jerseys from top clubs and national teams. Quality guaranteed, fast delivery across Bangladesh. Cash on Delivery available.',
   image = '/og-image.jpg',
   url = typeof window !== 'undefined' ? window.location.href : '',
   product,
 }: SEOProps) => {
-  const siteName = 'JerseyStore';
+  const siteName = 'JerseyHub';
 
   // Generate product structured data if product is provided
   const productSchema = product

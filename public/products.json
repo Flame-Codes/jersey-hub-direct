@@ -19,10 +19,15 @@
       "price": 2500,
       "discount": 10,
       "image": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80",
+        "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80",
+        "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80"
+      ],
       "sizes": ["S", "M", "L", "XL", "XXL"],
       "stock": true,
       "featured": true,
-      "description": "Official Barcelona home kit for the 2025/26 season. Premium quality fabric with breathable technology."
+      "description": "Official Barcelona home kit for the 2025/26 season. Premium quality fabric with breathable technology. Features the iconic Blaugrana stripes with modern design elements. Perfect for match days or casual wear."
     },
     {
       "id": "2",
@@ -31,10 +36,14 @@
       "price": 2500,
       "discount": 15,
       "image": "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=800&q=80",
+        "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80"
+      ],
       "sizes": ["S", "M", "L", "XL"],
       "stock": true,
       "featured": true,
-      "description": "Authentic Real Madrid home jersey with the classic white design and gold accents."
+      "description": "Authentic Real Madrid home jersey with the classic white design and gold accents. Made with premium materials for ultimate comfort. The perfect choice for Los Blancos fans."
     },
     {
       "id": "3",
@@ -43,10 +52,14 @@
       "price": 2200,
       "discount": 0,
       "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80",
+        "https://images.unsplash.com/photo-1551854838-212c9a5fbd61?w=800&q=80"
+      ],
       "sizes": ["M", "L", "XL"],
       "stock": true,
       "featured": true,
-      "description": "Manchester United away kit with modern design and comfortable fit."
+      "description": "Manchester United away kit with modern design and comfortable fit. Features moisture-wicking technology to keep you cool during intense matches."
     },
     {
       "id": "4",
@@ -55,10 +68,14 @@
       "price": 1800,
       "discount": 20,
       "image": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80",
+        "https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=800&q=80"
+      ],
       "sizes": ["S", "M", "L", "XL", "XXL"],
       "stock": true,
       "featured": true,
-      "description": "Classic Brazil 1970 World Cup winning jersey. A piece of football history."
+      "description": "Classic Brazil 1970 World Cup winning jersey. A piece of football history featuring the iconic yellow and green colors. Perfect for collectors and Seleção fans."
     },
     {
       "id": "5",
@@ -67,10 +84,13 @@
       "price": 2300,
       "discount": 5,
       "image": "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800&q=80"
+      ],
       "sizes": ["S", "M", "L"],
       "stock": true,
       "featured": false,
-      "description": "Liverpool FC home jersey with the iconic red color and modern design."
+      "description": "Liverpool FC home jersey with the iconic red color and modern design. You'll Never Walk Alone with this premium quality jersey."
     },
     {
       "id": "6",
@@ -79,10 +99,13 @@
       "price": 2500,
       "discount": 0,
       "image": "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=800&q=80"
+      ],
       "sizes": ["S", "M", "L", "XL"],
       "stock": true,
       "featured": false,
-      "description": "Barcelona away kit featuring a bold new design for the 25/26 season."
+      "description": "Barcelona away kit featuring a bold new design for the 25/26 season. Stand out from the crowd with this unique alternative jersey."
     },
     {
       "id": "7",
@@ -91,10 +114,14 @@
       "price": 2800,
       "discount": 10,
       "image": "https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=800&q=80",
+        "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80"
+      ],
       "sizes": ["S", "M", "L", "XL", "XXL"],
       "stock": true,
       "featured": true,
-      "description": "Argentina national team jersey celebrating their World Cup victory."
+      "description": "Argentina national team jersey celebrating their World Cup victory. Wear the colors of champions with this premium quality jersey."
     },
     {
       "id": "8",
@@ -103,10 +130,13 @@
       "price": 1900,
       "discount": 15,
       "image": "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=800&q=80"
+      ],
       "sizes": ["M", "L", "XL"],
       "stock": false,
       "featured": false,
-      "description": "Iconic Real Madrid 2002 Champions League winning jersey."
+      "description": "Iconic Real Madrid 2002 Champions League winning jersey. A must-have for Madridistas and collectors of football history."
     },
     {
       "id": "9",
@@ -115,10 +145,13 @@
       "price": 1500,
       "discount": 0,
       "image": "https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=800&q=80"
+      ],
       "sizes": ["S", "M", "L", "XL"],
       "stock": true,
       "featured": false,
-      "description": "Comfortable travel training shirt perfect for practice sessions."
+      "description": "Comfortable travel training shirt perfect for practice sessions. Lightweight and breathable for maximum performance."
     },
     {
       "id": "10",
@@ -127,10 +160,13 @@
       "price": 2400,
       "discount": 5,
       "image": "https://images.unsplash.com/photo-1551854838-212c9a5fbd61?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1551854838-212c9a5fbd61?w=800&q=80"
+      ],
       "sizes": ["S", "M", "L", "XL"],
       "stock": true,
       "featured": true,
-      "description": "Paris Saint-Germain home jersey with elegant Parisian design."
+      "description": "Paris Saint-Germain home jersey with elegant Parisian design. Features the iconic PSG crest and premium quality materials."
     },
     {
       "id": "11",
@@ -139,10 +175,13 @@
       "price": 2600,
       "discount": 0,
       "image": "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?w=800&q=80"
+      ],
       "sizes": ["M", "L", "XL", "XXL"],
       "stock": true,
       "featured": false,
-      "description": "Bayern Munich full sleeve jersey for the cooler seasons."
+      "description": "Bayern Munich full sleeve jersey for the cooler seasons. Perfect for fans who want to stay warm while supporting Die Roten."
     },
     {
       "id": "12",
@@ -151,10 +190,13 @@
       "price": 2200,
       "discount": 10,
       "image": "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=600&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800&q=80"
+      ],
       "sizes": ["S", "M", "L"],
       "stock": true,
       "featured": false,
-      "description": "Classic Chelsea blue half sleeve jersey with premium finish."
+      "description": "Classic Chelsea blue half sleeve jersey with premium finish. Show your Blues pride with this authentic quality jersey."
     }
   ]
 }

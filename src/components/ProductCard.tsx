@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Eye, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types/product';
@@ -18,71 +19,84 @@ const ProductCard = ({ product, onQuickView, onOrder }: ProductCardProps) => {
   return (
     <article className="group relative overflow-hidden rounded-xl bg-card border border-border hover-lift">
       {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden bg-secondary">
-        {/* Discount Badge */}
-        {product.discount > 0 && (
-          <span className="badge-discount">-{product.discount}%</span>
-        )}
-
-        {/* Stock Badge */}
-        {!product.stock && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80">
-            <span className="rounded-lg bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground">
-              Out of Stock
-            </span>
-          </div>
-        )}
-
-        {/* Image */}
-        <img
-          src={product.image}
-          alt={product.name}
-          loading="lazy"
-          onLoad={() => setImageLoaded(true)}
-          className={cn(
-            'h-full w-full object-cover transition-all duration-500 group-hover:scale-110',
-            imageLoaded ? 'opacity-100' : 'opacity-0'
+      <Link to={`/product/${product.id}`} className="block">
+        <div className="relative aspect-square overflow-hidden bg-secondary">
+          {/* Discount Badge */}
+          {product.discount > 0 && (
+            <span className="badge-discount">-{product.discount}%</span>
           )}
-        />
 
-        {/* Loading Skeleton */}
-        {!imageLoaded && (
-          <div className="absolute inset-0 animate-pulse bg-muted" />
-        )}
+          {/* Stock Badge */}
+          {!product.stock && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80">
+              <span className="rounded-lg bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground">
+                Out of Stock
+              </span>
+            </div>
+          )}
 
-        {/* Hover Actions */}
-        <div className="absolute inset-0 flex items-center justify-center gap-2 bg-background/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={() => onQuickView(product)}
-            aria-label="Quick view"
-          >
-            <Eye className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="gold"
-            size="icon"
-            onClick={() => onOrder(product)}
-            disabled={!product.stock}
-            aria-label="Order now"
-          >
-            <ShoppingCart className="h-4 w-4" />
-          </Button>
+          {/* Image */}
+          <img
+            src={product.image}
+            alt={product.name}
+            loading="lazy"
+            onLoad={() => setImageLoaded(true)}
+            className={cn(
+              'h-full w-full object-cover transition-all duration-500 group-hover:scale-110',
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            )}
+          />
+
+          {/* Loading Skeleton */}
+          {!imageLoaded && (
+            <div className="absolute inset-0 animate-pulse bg-muted" />
+          )}
+
+          {/* Hover Actions */}
+          <div className="absolute inset-0 flex items-center justify-center gap-2 bg-background/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <Button
+              variant="secondary"
+              size="icon"
+              onClick={(e) => {
+                e.preventDefault();
+                onQuickView(product);
+              }}
+              aria-label="Quick view"
+            >
+              <Eye className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="gold"
+              size="icon"
+              onClick={(e) => {
+                e.preventDefault();
+                onOrder(product);
+              }}
+              disabled={!product.stock}
+              aria-label="Order now"
+            >
+              <ShoppingCart className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="p-4">
         {/* Category */}
-        <p className="mb-1 text-xs font-medium uppercase tracking-wider text-primary">
+        <Link 
+          to={`/category/${encodeURIComponent(product.category)}`}
+          className="mb-1 text-xs font-medium uppercase tracking-wider text-primary hover:underline"
+        >
           {product.category}
-        </p>
+        </Link>
 
         {/* Name */}
-        <h3 className="mb-2 line-clamp-2 font-semibold text-foreground group-hover:text-primary transition-colors">
-          {product.name}
-        </h3>
+        <Link to={`/product/${product.id}`}>
+          <h3 className="mb-2 line-clamp-2 font-semibold text-foreground group-hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+        </Link>
 
         {/* Price */}
         <div className="flex items-center gap-2">

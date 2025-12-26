@@ -1,3 +1,4 @@
+import { Link, useNavigate } from 'react-router-dom';
 import { X, ChevronRight, Shirt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -17,6 +18,18 @@ const CategoryDrawer = ({
   selectedCategory,
   onCategorySelect,
 }: CategoryDrawerProps) => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (category: string) => {
+    onCategorySelect(category);
+    onClose();
+    if (category === 'All Jerseys') {
+      navigate('/');
+    } else {
+      navigate(`/category/${encodeURIComponent(category)}`);
+    }
+  };
+
   return (
     <>
       {/* Backdrop */}
@@ -52,10 +65,7 @@ const CategoryDrawer = ({
             {categories.map((category) => (
               <li key={category}>
                 <button
-                  onClick={() => {
-                    onCategorySelect(category);
-                    onClose();
-                  }}
+                  onClick={() => handleCategoryClick(category)}
                   className={cn(
                     'flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-medium transition-all duration-200',
                     selectedCategory === category
@@ -79,7 +89,7 @@ const CategoryDrawer = ({
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 border-t border-border p-4">
           <div className="text-center text-xs text-muted-foreground">
-            <p>© 2025 JerseyStore</p>
+            <p>© 2025 JerseyHub</p>
             <p className="mt-1">All rights reserved</p>
           </div>
         </div>
