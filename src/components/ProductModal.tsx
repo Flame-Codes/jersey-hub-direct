@@ -123,12 +123,13 @@ const ProductModal = ({ product, isOpen, onClose, onOrder }: ProductModalProps) 
                   {product.sizes.map((size) => (
                     <button
                       key={size}
+                      type="button"
                       onClick={() => setSelectedSize(size)}
                       className={cn(
-                        'min-w-[48px] rounded-lg border px-4 py-2 text-sm font-medium transition-all',
+                        'min-w-[48px] rounded-xl border-2 px-4 py-2.5 text-sm font-semibold transition-all',
                         selectedSize === size
                           ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-border bg-secondary text-foreground hover:border-primary'
+                          : 'border-border bg-secondary text-foreground hover:border-primary/50'
                       )}
                     >
                       {size}

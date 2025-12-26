@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { ArrowLeft, Share2, Heart, Minus, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Share2, Minus, Plus, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import BackToTop from '@/components/BackToTop';
-import OrderModal from '@/components/OrderModal';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,7 +21,6 @@ const ProductPage = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -33,7 +31,6 @@ const ProductPage = () => {
         const foundProduct = data.products.find((p: Product) => p.id === id);
         
         if (foundProduct) {
-          // Apply local image
           const productWithLocalImage = {
             ...foundProduct,
             image: getJerseyImage(foundProduct.id, foundProduct.image),
@@ -41,15 +38,27 @@ const ProductPage = () => {
           setProduct(productWithLocalImage);
           setSelectedSize(foundProduct.sizes[0] || '');
           
-          // Get related products from same category with local images
-          const related = data.products
+          // Get related products - same category or random if not enough
+          let related = data.products
             .filter((p: Product) => p.category === foundProduct.category && p.id !== foundProduct.id)
-            .slice(0, 4)
             .map((p: Product) => ({
               ...p,
               image: getJerseyImage(p.id, p.image),
             }));
-          setRelatedProducts(related);
+          
+          // If not enough related products, add more from other categories
+          if (related.length < 4) {
+            const others = data.products
+              .filter((p: Product) => p.id !== foundProduct.id && !related.find((r: Product) => r.id === p.id))
+              .slice(0, 4 - related.length)
+              .map((p: Product) => ({
+                ...p,
+                image: getJerseyImage(p.id, p.image),
+              }));
+            related = [...related, ...others];
+          }
+          
+          setRelatedProducts(related.slice(0, 6));
         }
       } catch (error) {
         console.error('Failed to fetch product:', error);
@@ -59,12 +68,14 @@ const ProductPage = () => {
     };
 
     fetchProduct();
+    window.scrollTo(0, 0);
   }, [id]);
 
   const discountedPrice = product
     ? product.price - (product.price * product.discount) / 100
     : 0;
 
+  const totalPrice = discountedPrice * quantity;
   const images = product?.images || (product ? [product.image] : []);
 
   const handleShare = async () => {
@@ -79,10 +90,23 @@ const ProductPage = () => {
     }
   };
 
+  const handleOrder = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    navigate('/order', {
+      state: {
+        product,
+        selectedSize,
+        quantity,
+      }
+    });
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-foreground">Loading...</div>
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
       </div>
     );
   }
@@ -119,15 +143,15 @@ const ProductPage = () => {
               {product.category}
             </Link>
             <span>/</span>
-            <span className="text-foreground">{product.name}</span>
+            <span className="text-foreground truncate max-w-[150px]">{product.name}</span>
           </div>
         </div>
 
         {/* Product Section */}
-        <main className="container pb-16">
+        <main className="container pb-32 md:pb-16">
           <div className="grid gap-8 lg:grid-cols-2">
             {/* Image Gallery */}
-            <div className="space-y-4">
+            <div className="space-y-4 animate-slide-up">
               <div className="relative aspect-square overflow-hidden rounded-2xl bg-secondary">
                 <img
                   src={images[currentImageIndex]}
@@ -136,32 +160,29 @@ const ProductPage = () => {
                   loading="lazy"
                 />
                 
-                {/* Discount Badge */}
                 {product.discount > 0 && (
-                  <Badge className="absolute left-4 top-4 bg-primary text-primary-foreground">
-                    -{product.discount}%
-                  </Badge>
+                  <div className="badge-discount">-{product.discount}%</div>
                 )}
 
-                {/* Stock Badge */}
                 {!product.stock && (
                   <Badge variant="destructive" className="absolute right-4 top-4">
                     Out of Stock
                   </Badge>
                 )}
 
-                {/* Image Navigation */}
                 {images.length > 1 && (
                   <>
                     <button
+                      type="button"
                       onClick={() => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 backdrop-blur-sm transition-colors hover:bg-background"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-background"
                     >
                       <ChevronLeft className="h-5 w-5" />
                     </button>
                     <button
+                      type="button"
                       onClick={() => setCurrentImageIndex((prev) => (prev + 1) % images.length)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/80 p-2 backdrop-blur-sm transition-colors hover:bg-background"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-background"
                     >
                       <ChevronRight className="h-5 w-5" />
                     </button>
@@ -169,17 +190,17 @@ const ProductPage = () => {
                 )}
               </div>
 
-              {/* Thumbnails */}
               {images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto pb-2">
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                   {images.map((img, index) => (
                     <button
                       key={index}
+                      type="button"
                       onClick={() => setCurrentImageIndex(index)}
                       className={cn(
-                        "h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all",
+                        "h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all",
                         currentImageIndex === index
-                          ? "border-primary"
+                          ? "border-primary ring-2 ring-primary/20"
                           : "border-transparent opacity-60 hover:opacity-100"
                       )}
                     >
@@ -191,17 +212,17 @@ const ProductPage = () => {
             </div>
 
             {/* Product Details */}
-            <div className="space-y-6">
+            <div className="space-y-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
               <div>
-                <p className="text-sm font-medium text-primary">{product.category}</p>
-                <h1 className="mt-2 font-display text-3xl md:text-4xl text-foreground">
+                <p className="text-sm font-semibold text-primary">{product.category}</p>
+                <h1 className="mt-2 text-2xl md:text-3xl font-display text-foreground">
                   {product.name}
                 </h1>
               </div>
 
               {/* Price */}
               <div className="flex items-baseline gap-3">
-                <span className="font-display text-3xl text-primary">
+                <span className="text-3xl font-bold text-primary">
                   ৳{discountedPrice.toLocaleString()}
                 </span>
                 {product.discount > 0 && (
@@ -212,16 +233,11 @@ const ProductPage = () => {
               </div>
 
               {/* Stock Status */}
-              <div className="flex items-center gap-2">
-                <div
-                  className={cn(
-                    "h-3 w-3 rounded-full",
-                    product.stock ? "bg-green-500" : "bg-red-500"
-                  )}
-                />
-                <span className={product.stock ? "text-green-500" : "text-red-500"}>
-                  {product.stock ? "In Stock" : "Out of Stock"}
-                </span>
+              <div className={cn(
+                "badge-stock inline-flex",
+                product.stock ? "in-stock" : "out-of-stock"
+              )}>
+                {product.stock ? "✓ In Stock" : "✗ Out of Stock"}
               </div>
 
               {/* Description */}
@@ -231,17 +247,18 @@ const ProductPage = () => {
 
               {/* Size Selector */}
               <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">Size</label>
+                <label className="text-sm font-semibold text-foreground">Select Size</label>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((size) => (
                     <button
                       key={size}
+                      type="button"
                       onClick={() => setSelectedSize(size)}
                       className={cn(
-                        "min-w-[48px] rounded-lg border-2 px-4 py-2 text-sm font-medium transition-all",
+                        "min-w-[48px] rounded-xl border-2 px-4 py-2.5 text-sm font-semibold transition-all",
                         selectedSize === size
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border text-foreground hover:border-primary"
+                          ? "border-primary bg-primary text-primary-foreground shadow-lg"
+                          : "border-border text-foreground hover:border-primary/50 hover:bg-secondary"
                       )}
                     >
                       {size}
@@ -252,38 +269,47 @@ const ProductPage = () => {
 
               {/* Quantity Selector */}
               <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">Quantity</label>
+                <label className="text-sm font-semibold text-foreground">Quantity</label>
                 <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="rounded-lg border border-border p-2 transition-colors hover:bg-secondary"
-                  >
-                    <Minus className="h-4 w-4" />
-                  </button>
-                  <span className="min-w-[40px] text-center text-lg font-medium">
-                    {quantity}
+                  <div className="flex items-center gap-2 bg-secondary rounded-xl p-1">
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-background transition-colors"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="w-10 text-center text-lg font-semibold">
+                      {quantity}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-background transition-colors"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <span className="text-muted-foreground">
+                    Total: <span className="font-bold text-foreground">৳{totalPrice.toLocaleString()}</span>
                   </span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="rounded-lg border border-border p-2 transition-colors hover:bg-secondary"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
                 </div>
               </div>
 
-              {/* Actions */}
-              <div className="flex gap-3 pt-4">
+              {/* Desktop Actions */}
+              <div className="hidden md:flex gap-3 pt-4">
                 <Button
-                  variant="gold"
+                  type="button"
+                  onClick={handleOrder}
                   size="lg"
-                  className="flex-1"
-                  onClick={() => setIsOrderModalOpen(true)}
+                  className="flex-1 btn-primary gap-2"
                   disabled={!product.stock}
                 >
+                  <ShoppingBag className="h-5 w-5" />
                   Order Now
                 </Button>
                 <Button
+                  type="button"
                   variant="outline"
                   size="lg"
                   onClick={handleShare}
@@ -294,9 +320,9 @@ const ProductPage = () => {
               </div>
 
               {/* COD Notice */}
-              <div className="rounded-xl bg-secondary/50 p-4 text-center">
-                <p className="text-sm text-muted-foreground">
-                  💵 Cash on Delivery Only • 🚚 Fast Delivery • 📞 WhatsApp Support
+              <div className="rounded-xl bg-success/10 border border-success/20 p-4 text-center">
+                <p className="text-sm text-success font-medium">
+                  💵 Cash on Delivery • 🚚 Fast Delivery • 📞 WhatsApp Support
                 </p>
               </div>
             </div>
@@ -304,31 +330,31 @@ const ProductPage = () => {
 
           {/* Related Products */}
           {relatedProducts.length > 0 && (
-            <section className="mt-16">
-              <h2 className="mb-6 font-display text-2xl text-foreground">
-                Related Products
+            <section className="mt-16 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+              <h2 className="mb-6 text-xl md:text-2xl font-display text-foreground">
+                You May Also Like
               </h2>
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                 {relatedProducts.map((rp) => (
                   <Link
                     key={rp.id}
                     to={`/product/${rp.id}`}
-                    className="group overflow-hidden rounded-xl bg-card transition-transform hover:scale-[1.02]"
+                    className="group card-interactive overflow-hidden"
                   >
                     <div className="aspect-square overflow-hidden">
                       <img
                         src={rp.image}
                         alt={rp.name}
-                        className="h-full w-full object-cover transition-transform group-hover:scale-110"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                         loading="lazy"
                       />
                     </div>
                     <div className="p-3">
                       <p className="text-xs text-muted-foreground">{rp.category}</p>
-                      <h3 className="mt-1 font-medium text-foreground line-clamp-1">
+                      <h3 className="mt-1 font-medium text-foreground line-clamp-1 text-sm">
                         {rp.name}
                       </h3>
-                      <p className="mt-1 text-primary font-semibold">
+                      <p className="mt-1 text-primary font-bold">
                         ৳{(rp.price - (rp.price * rp.discount) / 100).toLocaleString()}
                       </p>
                     </div>
@@ -339,17 +365,36 @@ const ProductPage = () => {
           )}
         </main>
 
-        <Footer />
+        {/* Mobile Sticky Bottom Bar */}
+        <div className="md:hidden sticky-bottom-bar p-4">
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              size="lg"
+              onClick={handleShare}
+              className="px-4"
+            >
+              <Share2 className="h-5 w-5" />
+            </Button>
+            <Button
+              type="button"
+              onClick={handleOrder}
+              size="lg"
+              className="flex-1 btn-primary gap-2"
+              disabled={!product.stock}
+            >
+              <ShoppingBag className="h-5 w-5" />
+              Order • ৳{totalPrice.toLocaleString()}
+            </Button>
+          </div>
+        </div>
+
+        <div className="hidden md:block">
+          <Footer />
+        </div>
         <WhatsAppButton />
         <BackToTop />
-
-        <OrderModal
-          product={product}
-          selectedSize={selectedSize}
-          quantity={quantity}
-          isOpen={isOrderModalOpen}
-          onClose={() => setIsOrderModalOpen(false)}
-        />
       </div>
     </HelmetProvider>
   );

@@ -7,21 +7,19 @@ import HeroCarousel from '@/components/HeroCarousel';
 import Filters from '@/components/Filters';
 import ProductCard from '@/components/ProductCard';
 import ProductModal from '@/components/ProductModal';
-import OrderModal from '@/components/OrderModal';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import BackToTop from '@/components/BackToTop';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { useProducts } from '@/hooks/useProducts';
 import { Product } from '@/types/product';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
+  const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
-  const [orderSize, setOrderSize] = useState('');
-  const [orderQuantity, setOrderQuantity] = useState(1);
   const productsRef = useRef<HTMLElement>(null);
 
   const {
@@ -38,18 +36,24 @@ const Index = () => {
   };
 
   const handleOrderFromCard = (product: Product) => {
-    setSelectedProduct(product);
-    setOrderSize(product.sizes[0] || '');
-    setOrderQuantity(1);
-    setIsOrderModalOpen(true);
+    navigate('/order', {
+      state: {
+        product,
+        selectedSize: product.sizes[0] || '',
+        quantity: 1,
+      }
+    });
   };
 
   const handleOrderFromModal = (product: Product, size: string, quantity: number) => {
-    setSelectedProduct(product);
-    setOrderSize(size);
-    setOrderQuantity(quantity);
     setIsProductModalOpen(false);
-    setIsOrderModalOpen(true);
+    navigate('/order', {
+      state: {
+        product,
+        selectedSize: size,
+        quantity,
+      }
+    });
   };
 
   const scrollToProducts = () => {
@@ -61,14 +65,12 @@ const Index = () => {
       <div className="min-h-screen bg-background">
         <SEO />
 
-        {/* Header */}
         <Header
           onMenuClick={() => setIsDrawerOpen(true)}
           searchQuery={filters.searchQuery}
           onSearchChange={(query) => updateFilter('searchQuery', query)}
         />
 
-        {/* Category Drawer */}
         <CategoryDrawer
           isOpen={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
@@ -77,10 +79,8 @@ const Index = () => {
           onCategorySelect={(category) => updateFilter('category', category)}
         />
 
-        {/* Hero Carousel */}
         <HeroCarousel onShopClick={scrollToProducts} />
 
-        {/* Filters */}
         <Filters
           categories={categories}
           filters={filters}
@@ -88,12 +88,10 @@ const Index = () => {
           productCount={products.length}
         />
 
-        {/* Products Section */}
         <main ref={productsRef} id="products" className="py-12">
           <div className="container">
-            {/* Section Header */}
             <div className="mb-8 text-center">
-              <h2 className="font-display text-3xl md:text-4xl text-foreground">
+              <h2 className="text-2xl md:text-3xl font-display text-foreground">
                 {filters.category === 'All Jerseys' ? 'All Products' : filters.category}
               </h2>
               <p className="mt-2 text-muted-foreground">
@@ -101,33 +99,31 @@ const Index = () => {
               </p>
             </div>
 
-            {/* Loading State */}
             {loading && (
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {Array.from({ length: 8 }).map((_, i) => (
                   <div
                     key={i}
-                    className="aspect-[3/4] animate-pulse rounded-xl bg-muted"
+                    className="aspect-[3/4] animate-pulse rounded-2xl bg-muted"
                   />
                 ))}
               </div>
             )}
 
-            {/* Products Grid */}
             {!loading && products.length > 0 && (
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                {products.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onQuickView={handleQuickView}
-                    onOrder={handleOrderFromCard}
-                  />
+                {products.map((product, index) => (
+                  <div key={product.id} style={{ animationDelay: `${index * 0.05}s` }}>
+                    <ProductCard
+                      product={product}
+                      onQuickView={handleQuickView}
+                      onOrder={handleOrderFromCard}
+                    />
+                  </div>
                 ))}
               </div>
             )}
 
-            {/* Empty State */}
             {!loading && products.length === 0 && (
               <div className="py-16 text-center">
                 <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-secondary">
@@ -142,27 +138,15 @@ const Index = () => {
           </div>
         </main>
 
-        {/* Footer */}
         <Footer />
-
-        {/* Floating Buttons */}
         <WhatsAppButton />
         <BackToTop />
 
-        {/* Modals */}
         <ProductModal
           product={selectedProduct}
           isOpen={isProductModalOpen}
           onClose={() => setIsProductModalOpen(false)}
           onOrder={handleOrderFromModal}
-        />
-
-        <OrderModal
-          product={selectedProduct}
-          selectedSize={orderSize}
-          quantity={orderQuantity}
-          isOpen={isOrderModalOpen}
-          onClose={() => setIsOrderModalOpen(false)}
         />
       </div>
     </HelmetProvider>
