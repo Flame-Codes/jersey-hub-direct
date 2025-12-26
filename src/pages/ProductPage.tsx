@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { ArrowLeft, Share2, Minus, Plus, ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
+import { Share2, Minus, Plus, ChevronLeft, ChevronRight, ShoppingBag, ShoppingCart } from 'lucide-react';
 import Header from '@/components/Header';
+import CategoryDrawer from '@/components/CategoryDrawer';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import BackToTop from '@/components/BackToTop';
@@ -12,10 +13,19 @@ import { Badge } from '@/components/ui/badge';
 import { Product } from '@/types/product';
 import { cn } from '@/lib/utils';
 import { getJerseyImage } from '@/assets/jerseys';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
+import { useProducts } from '@/hooks/useProducts';
 
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+  const { categories, filters, updateFilter } = useProducts();
+  
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState('');
@@ -38,7 +48,7 @@ const ProductPage = () => {
           setProduct(productWithLocalImage);
           setSelectedSize(foundProduct.sizes[0] || '');
           
-          // Get related products - same category or random if not enough
+          // Get related products
           let related = data.products
             .filter((p: Product) => p.category === foundProduct.category && p.id !== foundProduct.id)
             .map((p: Product) => ({
@@ -46,7 +56,6 @@ const ProductPage = () => {
               image: getJerseyImage(p.id, p.image),
             }));
           
-          // If not enough related products, add more from other categories
           if (related.length < 4) {
             const others = data.products
               .filter((p: Product) => p.id !== foundProduct.id && !related.find((r: Product) => r.id === p.id))
@@ -87,7 +96,20 @@ const ProductPage = () => {
       });
     } else {
       navigator.clipboard.writeText(window.location.href);
+      toast({ title: 'Link copied to clipboard!' });
     }
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!product?.stock) return;
+    
+    addToCart(product, selectedSize, quantity);
+    toast({
+      title: 'Added to Cart',
+      description: `${product.name} has been added to your cart.`,
+    });
   };
 
   const handleOrder = (e: React.MouseEvent) => {
@@ -101,6 +123,12 @@ const ProductPage = () => {
         quantity,
       }
     });
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    updateFilter('searchQuery', query);
+    if (query) navigate('/');
   };
 
   if (loading) {
@@ -129,7 +157,23 @@ const ProductPage = () => {
           image={product.image}
         />
 
-        <Header onMenuClick={() => {}} searchQuery="" onSearchChange={() => {}} />
+        <Header 
+          onMenuClick={() => setIsDrawerOpen(true)} 
+          searchQuery={searchQuery} 
+          onSearchChange={handleSearchChange} 
+        />
+
+        <CategoryDrawer
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          categories={categories}
+          selectedCategory={filters.category}
+          onCategorySelect={(cat) => {
+            updateFilter('category', cat);
+            setIsDrawerOpen(false);
+            navigate(cat === 'All Jerseys' ? '/' : `/category/${encodeURIComponent(cat)}`);
+          }}
+        />
 
         {/* Breadcrumb */}
         <div className="container py-4">
@@ -175,16 +219,16 @@ const ProductPage = () => {
                     <button
                       type="button"
                       onClick={() => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-background"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-background text-foreground"
                     >
-                      <ChevronLeft className="h-5 w-5" />
+                      <ChevronLeft className="h-5 w-5" strokeWidth={2} />
                     </button>
                     <button
                       type="button"
                       onClick={() => setCurrentImageIndex((prev) => (prev + 1) % images.length)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-background"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-background text-foreground"
                     >
-                      <ChevronRight className="h-5 w-5" />
+                      <ChevronRight className="h-5 w-5" strokeWidth={2} />
                     </button>
                   </>
                 )}
@@ -275,19 +319,19 @@ const ProductPage = () => {
                     <button
                       type="button"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-background transition-colors"
+                      className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-background transition-colors text-foreground"
                     >
-                      <Minus className="h-4 w-4" />
+                      <Minus className="h-4 w-4" strokeWidth={2} />
                     </button>
-                    <span className="w-10 text-center text-lg font-semibold">
+                    <span className="w-10 text-center text-lg font-semibold text-foreground">
                       {quantity}
                     </span>
                     <button
                       type="button"
                       onClick={() => setQuantity(quantity + 1)}
-                      className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-background transition-colors"
+                      className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-background transition-colors text-foreground"
                     >
-                      <Plus className="h-4 w-4" />
+                      <Plus className="h-4 w-4" strokeWidth={2} />
                     </button>
                   </div>
                   <span className="text-muted-foreground">
@@ -300,12 +344,23 @@ const ProductPage = () => {
               <div className="hidden md:flex gap-3 pt-4">
                 <Button
                   type="button"
+                  onClick={handleAddToCart}
+                  size="lg"
+                  variant="secondary"
+                  className="flex-1 gap-2"
+                  disabled={!product.stock}
+                >
+                  <ShoppingCart className="h-5 w-5" strokeWidth={2} />
+                  Add to Cart
+                </Button>
+                <Button
+                  type="button"
                   onClick={handleOrder}
                   size="lg"
                   className="flex-1 btn-primary gap-2"
                   disabled={!product.stock}
                 >
-                  <ShoppingBag className="h-5 w-5" />
+                  <ShoppingBag className="h-5 w-5" strokeWidth={2} />
                   Order Now
                 </Button>
                 <Button
@@ -315,7 +370,7 @@ const ProductPage = () => {
                   onClick={handleShare}
                   className="px-4"
                 >
-                  <Share2 className="h-5 w-5" />
+                  <Share2 className="h-5 w-5" strokeWidth={2} />
                 </Button>
               </div>
 
@@ -367,15 +422,17 @@ const ProductPage = () => {
 
         {/* Mobile Sticky Bottom Bar */}
         <div className="md:hidden sticky-bottom-bar p-4">
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <Button
               type="button"
-              variant="outline"
+              variant="secondary"
               size="lg"
-              onClick={handleShare}
-              className="px-4"
+              onClick={handleAddToCart}
+              className="flex-1 gap-2"
+              disabled={!product.stock}
             >
-              <Share2 className="h-5 w-5" />
+              <ShoppingCart className="h-5 w-5" strokeWidth={2} />
+              Add to Cart
             </Button>
             <Button
               type="button"
@@ -384,7 +441,7 @@ const ProductPage = () => {
               className="flex-1 btn-primary gap-2"
               disabled={!product.stock}
             >
-              <ShoppingBag className="h-5 w-5" />
+              <ShoppingBag className="h-5 w-5" strokeWidth={2} />
               Order • ৳{totalPrice.toLocaleString()}
             </Button>
           </div>

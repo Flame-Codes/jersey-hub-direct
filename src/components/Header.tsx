@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Menu, Search, ShoppingBag, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Menu, Search, ShoppingCart, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useCart } from '@/contexts/CartContext';
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -12,6 +14,7 @@ interface HeaderProps {
 
 const Header = ({ onMenuClick, searchQuery, onSearchChange }: HeaderProps) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { totalItems } = useCart();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,23 +33,23 @@ const Header = ({ onMenuClick, searchQuery, onSearchChange }: HeaderProps) => {
             variant="ghost"
             size="icon"
             onClick={onMenuClick}
-            className="lg:hidden"
+            className="lg:hidden text-foreground hover:bg-secondary"
             aria-label="Open menu"
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-6 w-6" strokeWidth={2} />
           </Button>
 
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-gold">
-              <ShoppingBag className="h-5 w-5 text-primary-foreground" />
+              <ShoppingCart className="h-5 w-5 text-primary-foreground" />
             </div>
             <div className="hidden sm:block">
               <h1 className="font-display text-xl tracking-wide text-foreground">
                 JERSEY<span className="text-primary">HUB</span>
               </h1>
             </div>
-          </a>
+          </Link>
         </div>
 
         {/* Center - Desktop Search */}
@@ -58,7 +61,7 @@ const Header = ({ onMenuClick, searchQuery, onSearchChange }: HeaderProps) => {
               placeholder="Search jerseys..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 bg-secondary border-border focus:border-primary"
+              className="pl-10 bg-secondary border-border focus:border-primary text-foreground placeholder:text-muted-foreground"
             />
           </div>
         </div>
@@ -69,12 +72,33 @@ const Header = ({ onMenuClick, searchQuery, onSearchChange }: HeaderProps) => {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="lg:hidden text-foreground hover:bg-secondary"
             onClick={() => setIsSearchOpen(!isSearchOpen)}
             aria-label="Toggle search"
           >
-            {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+            {isSearchOpen ? (
+              <X className="h-6 w-6" strokeWidth={2} />
+            ) : (
+              <Search className="h-6 w-6" strokeWidth={2} />
+            )}
           </Button>
+
+          {/* Cart Icon */}
+          <Link to="/cart" className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-foreground hover:bg-secondary"
+              aria-label="Shopping cart"
+            >
+              <ShoppingCart className="h-6 w-6" strokeWidth={2} />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold">
+                  {totalItems > 9 ? '9+' : totalItems}
+                </span>
+              )}
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -93,7 +117,7 @@ const Header = ({ onMenuClick, searchQuery, onSearchChange }: HeaderProps) => {
               placeholder="Search jerseys..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 bg-secondary border-border"
+              className="pl-10 bg-secondary border-border text-foreground placeholder:text-muted-foreground"
             />
           </div>
         </div>
