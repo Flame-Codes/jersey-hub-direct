@@ -1,0 +1,160 @@
+{
+  "categories": [
+    "All Jerseys",
+    "Travel Shirt",
+    "25/26 Season",
+    "Barcelona",
+    "Real Madrid",
+    "Half Sleeve Jersey",
+    "Full Sleeve Jersey",
+    "Retro Jersey Collection",
+    "Club Jersey 24/25 kit",
+    "Coming Soon"
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Barcelona Home Jersey 25/26",
+      "category": "Barcelona",
+      "price": 2500,
+      "discount": 10,
+      "image": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600&q=80",
+      "sizes": ["S", "M", "L", "XL", "XXL"],
+      "stock": true,
+      "featured": true,
+      "description": "Official Barcelona home kit for the 2025/26 season. Premium quality fabric with breathable technology."
+    },
+    {
+      "id": "2",
+      "name": "Real Madrid Home Jersey 25/26",
+      "category": "Real Madrid",
+      "price": 2500,
+      "discount": 15,
+      "image": "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600&q=80",
+      "sizes": ["S", "M", "L", "XL"],
+      "stock": true,
+      "featured": true,
+      "description": "Authentic Real Madrid home jersey with the classic white design and gold accents."
+    },
+    {
+      "id": "3",
+      "name": "Manchester United Away Jersey",
+      "category": "Club Jersey 24/25 kit",
+      "price": 2200,
+      "discount": 0,
+      "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&q=80",
+      "sizes": ["M", "L", "XL"],
+      "stock": true,
+      "featured": true,
+      "description": "Manchester United away kit with modern design and comfortable fit."
+    },
+    {
+      "id": "4",
+      "name": "Brazil Retro 1970 Jersey",
+      "category": "Retro Jersey Collection",
+      "price": 1800,
+      "discount": 20,
+      "image": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+      "sizes": ["S", "M", "L", "XL", "XXL"],
+      "stock": true,
+      "featured": true,
+      "description": "Classic Brazil 1970 World Cup winning jersey. A piece of football history."
+    },
+    {
+      "id": "5",
+      "name": "Liverpool Home Jersey 24/25",
+      "category": "Club Jersey 24/25 kit",
+      "price": 2300,
+      "discount": 5,
+      "image": "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=600&q=80",
+      "sizes": ["S", "M", "L"],
+      "stock": true,
+      "featured": false,
+      "description": "Liverpool FC home jersey with the iconic red color and modern design."
+    },
+    {
+      "id": "6",
+      "name": "Barcelona Away Jersey 25/26",
+      "category": "Barcelona",
+      "price": 2500,
+      "discount": 0,
+      "image": "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=600&q=80",
+      "sizes": ["S", "M", "L", "XL"],
+      "stock": true,
+      "featured": false,
+      "description": "Barcelona away kit featuring a bold new design for the 25/26 season."
+    },
+    {
+      "id": "7",
+      "name": "Argentina World Cup Jersey",
+      "category": "25/26 Season",
+      "price": 2800,
+      "discount": 10,
+      "image": "https://images.unsplash.com/photo-1606925797300-0b35e9d1794e?w=600&q=80",
+      "sizes": ["S", "M", "L", "XL", "XXL"],
+      "stock": true,
+      "featured": true,
+      "description": "Argentina national team jersey celebrating their World Cup victory."
+    },
+    {
+      "id": "8",
+      "name": "Real Madrid Retro 2002",
+      "category": "Retro Jersey Collection",
+      "price": 1900,
+      "discount": 15,
+      "image": "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=600&q=80",
+      "sizes": ["M", "L", "XL"],
+      "stock": false,
+      "featured": false,
+      "description": "Iconic Real Madrid 2002 Champions League winning jersey."
+    },
+    {
+      "id": "9",
+      "name": "Travel Training Shirt",
+      "category": "Travel Shirt",
+      "price": 1500,
+      "discount": 0,
+      "image": "https://images.unsplash.com/photo-1571945153237-4929e783af4a?w=600&q=80",
+      "sizes": ["S", "M", "L", "XL"],
+      "stock": true,
+      "featured": false,
+      "description": "Comfortable travel training shirt perfect for practice sessions."
+    },
+    {
+      "id": "10",
+      "name": "PSG Home Jersey 24/25",
+      "category": "Club Jersey 24/25 kit",
+      "price": 2400,
+      "discount": 5,
+      "image": "https://images.unsplash.com/photo-1551854838-212c9a5fbd61?w=600&q=80",
+      "sizes": ["S", "M", "L", "XL"],
+      "stock": true,
+      "featured": true,
+      "description": "Paris Saint-Germain home jersey with elegant Parisian design."
+    },
+    {
+      "id": "11",
+      "name": "Bayern Munich Full Sleeve",
+      "category": "Full Sleeve Jersey",
+      "price": 2600,
+      "discount": 0,
+      "image": "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?w=600&q=80",
+      "sizes": ["M", "L", "XL", "XXL"],
+      "stock": true,
+      "featured": false,
+      "description": "Bayern Munich full sleeve jersey for the cooler seasons."
+    },
+    {
+      "id": "12",
+      "name": "Chelsea Half Sleeve Jersey",
+      "category": "Half Sleeve Jersey",
+      "price": 2200,
+      "discount": 10,
+      "image": "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=600&q=80",
+      "sizes": ["S", "M", "L"],
+      "stock": true,
+      "featured": false,
+      "description": "Classic Chelsea blue half sleeve jersey with premium finish."
+    }
+  ]
+}
