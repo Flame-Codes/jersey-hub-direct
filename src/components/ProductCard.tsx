@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Eye, ShoppingCart } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Eye, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types/product';
 import { cn } from '@/lib/utils';
@@ -12,131 +12,61 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, onQuickView, onOrder }: ProductCardProps) => {
+  const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
-
   const discountedPrice = product.price * (1 - product.discount / 100);
 
-  return (
-    <article className="group relative overflow-hidden rounded-xl bg-card border border-border hover-lift">
-      {/* Image Container */}
-      <Link to={`/product/${product.id}`} className="block">
-        <div className="relative aspect-square overflow-hidden bg-secondary">
-          {/* Discount Badge */}
-          {product.discount > 0 && (
-            <span className="badge-discount">-{product.discount}%</span>
-          )}
+  const handleOrder = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate('/order', {
+      state: { product, selectedSize: product.sizes[0] || '', quantity: 1 }
+    });
+  };
 
-          {/* Stock Badge */}
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onQuickView(product);
+  };
+
+  return (
+    <article className="group card-interactive overflow-hidden">
+      <Link to={`/product/${product.id}`} className="block">
+        <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+          {product.discount > 0 && <div className="badge-discount">-{product.discount}%</div>}
           {!product.stock && (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80">
-              <span className="rounded-lg bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground">
-                Out of Stock
-              </span>
+              <span className="rounded-full bg-destructive px-4 py-2 text-sm font-bold text-white">Out of Stock</span>
             </div>
           )}
-
-          {/* Image */}
           <img
             src={product.image}
             alt={product.name}
             loading="lazy"
             onLoad={() => setImageLoaded(true)}
-            className={cn(
-              'h-full w-full object-cover transition-all duration-500 group-hover:scale-110',
-              imageLoaded ? 'opacity-100' : 'opacity-0'
-            )}
+            className={cn('h-full w-full object-cover transition-transform duration-500 group-hover:scale-110', imageLoaded ? 'opacity-100' : 'opacity-0')}
           />
-
-          {/* Loading Skeleton */}
-          {!imageLoaded && (
-            <div className="absolute inset-0 animate-pulse bg-muted" />
-          )}
-
-          {/* Hover Actions */}
-          <div className="absolute inset-0 flex items-center justify-center gap-2 bg-background/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={(e) => {
-                e.preventDefault();
-                onQuickView(product);
-              }}
-              aria-label="Quick view"
-            >
-              <Eye className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="gold"
-              size="icon"
-              onClick={(e) => {
-                e.preventDefault();
-                onOrder(product);
-              }}
-              disabled={!product.stock}
-              aria-label="Order now"
-            >
-              <ShoppingCart className="h-4 w-4" />
-            </Button>
+          {!imageLoaded && <div className="absolute inset-0 animate-pulse bg-muted" />}
+          <div className="absolute inset-x-0 bottom-0 translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="flex gap-2 p-3 bg-gradient-to-t from-background/95 to-transparent pt-8">
+              <button type="button" onClick={handleQuickView} className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-secondary py-2.5 text-sm font-semibold"><Eye className="h-4 w-4" />View</button>
+              <button type="button" onClick={handleOrder} disabled={!product.stock} className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"><ShoppingBag className="h-4 w-4" />Order</button>
+            </div>
           </div>
         </div>
       </Link>
-
-      {/* Content */}
       <div className="p-4">
-        {/* Category */}
-        <Link 
-          to={`/category/${encodeURIComponent(product.category)}`}
-          className="mb-1 text-xs font-medium uppercase tracking-wider text-primary hover:underline"
-        >
-          {product.category}
-        </Link>
-
-        {/* Name */}
-        <Link to={`/product/${product.id}`}>
-          <h3 className="mb-2 line-clamp-2 font-semibold text-foreground group-hover:text-primary transition-colors">
-            {product.name}
-          </h3>
-        </Link>
-
-        {/* Price */}
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-primary">
-            ৳{discountedPrice.toLocaleString()}
-          </span>
-          {product.discount > 0 && (
-            <span className="text-sm text-muted-foreground line-through">
-              ৳{product.price.toLocaleString()}
-            </span>
-          )}
+        <p className="text-xs font-medium text-primary uppercase tracking-wide">{product.category}</p>
+        <h3 className="mt-1.5 font-semibold text-foreground line-clamp-2 text-sm group-hover:text-primary transition-colors">{product.name}</h3>
+        <div className="mt-2 flex items-baseline gap-2">
+          <span className="text-lg font-bold text-primary">৳{discountedPrice.toLocaleString()}</span>
+          {product.discount > 0 && <span className="text-sm text-muted-foreground line-through">৳{product.price.toLocaleString()}</span>}
         </div>
-
-        {/* Sizes */}
         <div className="mt-3 flex flex-wrap gap-1">
-          {product.sizes.slice(0, 4).map((size) => (
-            <span
-              key={size}
-              className="rounded border border-border bg-secondary px-2 py-0.5 text-xs text-muted-foreground"
-            >
-              {size}
-            </span>
-          ))}
-          {product.sizes.length > 4 && (
-            <span className="rounded border border-border bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
-              +{product.sizes.length - 4}
-            </span>
-          )}
+          {product.sizes.slice(0, 4).map((size) => (<span key={size} className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-muted-foreground">{size}</span>))}
+          {product.sizes.length > 4 && <span className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-muted-foreground">+{product.sizes.length - 4}</span>}
         </div>
-
-        {/* Order Button */}
-        <Button
-          variant="gold"
-          className="mt-4 w-full"
-          onClick={() => onOrder(product)}
-          disabled={!product.stock}
-        >
-          <ShoppingCart className="h-4 w-4" />
-          Order Now
-        </Button>
       </div>
     </article>
   );
