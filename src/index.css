@@ -154,6 +154,10 @@
     @apply border-primary bg-background outline-none ring-4 ring-primary/10;
   }
 
+  .input-modern::placeholder {
+    @apply text-muted-foreground;
+  }
+
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -170,13 +174,31 @@
 
   /* Glass morphism effect */
   .glass {
-    @apply bg-background/80 backdrop-blur-lg border border-border/50;
+    @apply bg-background/80 backdrop-blur-lg border-t border-border/50;
   }
 
   /* Sticky mobile bar */
   .sticky-bottom-bar {
     @apply fixed bottom-0 left-0 right-0 z-40 glass safe-bottom;
     box-shadow: 0 -4px 20px rgb(0 0 0 / 0.1);
+  }
+
+  /* Gradient for gold banner */
+  .gradient-gold {
+    background: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--gold-dark)) 100%);
+  }
+
+  /* Explicit icon styling for visibility */
+  .icon-dark {
+    @apply text-foreground;
+    stroke: currentColor;
+    fill: none;
+  }
+
+  .icon-light {
+    @apply text-primary-foreground;
+    stroke: currentColor;
+    fill: none;
   }
 }
 
