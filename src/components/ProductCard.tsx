@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, ShoppingCart, ShoppingBag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Product } from '@/types/product';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
@@ -39,11 +38,6 @@ const ProductCard = ({ product, onQuickView, onOrder }: ProductCardProps) => {
     });
   };
 
-  const handleQuickView = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onQuickView(product);
-  };
 
   const handleCardClick = (e: React.MouseEvent) => {
     // Navigate to product page
@@ -61,7 +55,9 @@ const ProductCard = ({ product, onQuickView, onOrder }: ProductCardProps) => {
         onKeyDown={(e) => e.key === 'Enter' && handleCardClick(e as any)}
       >
         {product.discount > 0 && (
-          <div className="badge-discount z-20">-{product.discount}%</div>
+          <div className="absolute top-3 left-3 z-20 rounded-full bg-[hsl(var(--discount))] px-3 py-1 text-xs font-semibold text-white">
+            Save {product.discount}%
+          </div>
         )}
         {!product.stock && (
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/80 pointer-events-none">
@@ -80,34 +76,6 @@ const ProductCard = ({ product, onQuickView, onOrder }: ProductCardProps) => {
         />
         {!imageLoaded && <div className="absolute inset-0 animate-pulse bg-muted pointer-events-none" />}
         
-        {/* Desktop Hover Actions - Above image with proper z-index */}
-        <div className="hidden md:block absolute inset-x-0 bottom-0 z-30 translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
-          <div className="flex gap-2 p-3 bg-gradient-to-t from-background/95 to-transparent pt-8">
-            <button 
-              type="button" 
-              onClick={(e) => {
-                e.stopPropagation();
-                handleQuickView(e);
-              }}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-secondary py-2.5 text-sm font-semibold text-foreground hover:bg-secondary/80 transition-colors active:scale-95 touch-manipulation"
-            >
-              <Eye className="h-4 w-4 shrink-0" strokeWidth={2} />
-              <span>View</span>
-            </button>
-            <button 
-              type="button" 
-              onClick={(e) => {
-                e.stopPropagation();
-                handleAddToCart(e);
-              }}
-              disabled={!product.stock} 
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-50 hover:bg-primary/90 transition-colors active:scale-95 touch-manipulation"
-            >
-              <ShoppingCart className="h-4 w-4 shrink-0" strokeWidth={2} />
-              <span>Add</span>
-            </button>
-          </div>
-        </div>
       </div>
       
       {/* Product Info Section */}
@@ -119,38 +87,30 @@ const ProductCard = ({ product, onQuickView, onOrder }: ProductCardProps) => {
         >
           {product.name}
         </h3>
-        <div className="mt-2 flex items-baseline gap-2">
-          <span className="text-lg font-bold text-primary">৳{discountedPrice.toLocaleString()}</span>
-          {product.discount > 0 && <span className="text-sm text-muted-foreground line-through">৳{product.price.toLocaleString()}</span>}
-        </div>
-        <div className="mt-3 flex flex-wrap gap-1">
-          {product.sizes.slice(0, 4).map((size) => (
-            <span key={size} className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-foreground">{size}</span>
-          ))}
-          {product.sizes.length > 4 && <span className="rounded-md bg-secondary px-2 py-0.5 text-xs font-medium text-muted-foreground">+{product.sizes.length - 4}</span>}
+        <div className="mt-2 flex items-baseline gap-2 flex-wrap">
+          <span className="text-base font-bold text-foreground">BDT {discountedPrice.toLocaleString()}</span>
+          {product.discount > 0 && <span className="text-sm text-muted-foreground line-through">BDT {product.price.toLocaleString()}</span>}
         </div>
         
-        {/* Mobile Action Buttons - Always visible, isolated from image */}
-        <div className="mt-4 flex gap-2 md:hidden relative z-10">
+        {/* Action Buttons - Black/White Theme */}
+        <div className="mt-4 flex flex-col gap-2 relative z-10">
           <button
             type="button"
             onClick={handleAddToCart}
             disabled={!product.stock}
-            className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-secondary py-3 text-sm font-semibold text-foreground disabled:opacity-50 active:scale-95 transition-transform touch-manipulation select-none"
+            className="w-full flex items-center justify-center gap-2 rounded-full border-2 border-foreground bg-background py-3 text-sm font-bold uppercase tracking-wide text-foreground disabled:opacity-50 active:scale-[0.98] transition-all duration-200 touch-manipulation select-none hover:bg-secondary"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            <ShoppingCart className="h-4 w-4 shrink-0" strokeWidth={2} />
-            <span>Add to Cart</span>
+            ADD TO CART
           </button>
           <button
             type="button"
             onClick={handleOrder}
             disabled={!product.stock}
-            className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:opacity-50 active:scale-95 transition-transform touch-manipulation select-none"
+            className="w-full flex items-center justify-center gap-2 rounded-full bg-foreground py-3 text-sm font-bold uppercase tracking-wide text-background disabled:opacity-50 active:scale-[0.98] transition-all duration-200 touch-manipulation select-none hover:bg-foreground/90"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            <ShoppingBag className="h-4 w-4 shrink-0" strokeWidth={2} />
-            <span>Order</span>
+            BUY NOW
           </button>
         </div>
       </div>
