@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Loader2, CheckCircle, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +18,7 @@ interface OrderModalProps {
 
 const OrderModal = ({ product, selectedSize, quantity, isOpen, onClose }: OrderModalProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -44,7 +46,7 @@ const OrderModal = ({ product, selectedSize, quantity, isOpen, onClose }: OrderM
 
     setIsSubmitting(true);
 
-    const success = await sendOrderToTelegram({
+    const orderDetails = {
       name: formData.name,
       phone: formData.phone,
       address: formData.address,
@@ -53,18 +55,30 @@ const OrderModal = ({ product, selectedSize, quantity, isOpen, onClose }: OrderM
       quantity,
       size: selectedSize,
       price: totalPrice,
-    });
+    };
+
+    const success = await sendOrderToTelegram(orderDetails);
 
     setIsSubmitting(false);
 
     if (success) {
-      setIsSuccess(true);
-    } else {
-      toast({
-        title: 'Order sent!',
-        description: 'Your order has been received. We will contact you soon.',
+      // Redirect to order confirmation page
+      onClose();
+      setFormData({ name: '', phone: '', address: '' });
+      navigate('/order-confirmation', { 
+        state: { orderDetails }
       });
-      setIsSuccess(true);
+    } else {
+      // Still redirect even if Telegram fails (order is still valid)
+      toast({
+        title: 'Order Placed!',
+        description: 'Your order has been received. We will contact you soon via WhatsApp.',
+      });
+      onClose();
+      setFormData({ name: '', phone: '', address: '' });
+      navigate('/order-confirmation', { 
+        state: { orderDetails }
+      });
     }
   };
 
@@ -104,125 +118,95 @@ const OrderModal = ({ product, selectedSize, quantity, isOpen, onClose }: OrderM
             <X className="h-5 w-5" />
           </Button>
 
-          {isSuccess ? (
-            /* Success State */
-            <div className="p-8 text-center">
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-success/20">
-                <CheckCircle className="h-10 w-10 text-success" />
-              </div>
-              <h2 className="font-display text-2xl text-foreground">Order Placed!</h2>
-              <p className="mt-3 text-muted-foreground">
-                Your order has been sent successfully. Our team will contact you via WhatsApp.
-              </p>
-              <p className="mt-2 text-sm text-primary font-medium">
-                Contact: {WHATSAPP_DISPLAY_NUMBER}
-              </p>
-              <div className="mt-6 flex flex-col gap-3">
-                <a
-                  href={getWhatsAppLink(product.name)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="whatsapp" className="w-full">
-                    Chat on WhatsApp
-                  </Button>
-                </a>
-                <Button variant="outline" onClick={handleClose}>
-                  Continue Shopping
-                </Button>
+          {/* Order Form */}
+          <div className="p-6">
+            <h2 className="font-display text-2xl text-foreground">Place Order</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Cash on Delivery Only
+            </p>
+
+            {/* Order Summary */}
+            <div className="mt-6 rounded-lg bg-secondary p-4">
+              <div className="flex gap-4">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="h-20 w-20 rounded-lg object-cover"
+                />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-foreground">{product.name}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Size: {selectedSize} | Qty: {quantity}
+                  </p>
+                  <p className="mt-1 font-bold text-primary">
+                    ৳{totalPrice.toLocaleString()}
+                  </p>
+                </div>
               </div>
             </div>
-          ) : (
-            /* Order Form */
-            <div className="p-6">
-              <h2 className="font-display text-2xl text-foreground">Place Order</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Cash on Delivery Only
-              </p>
 
-              {/* Order Summary */}
-              <div className="mt-6 rounded-lg bg-secondary p-4">
-                <div className="flex gap-4">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-20 w-20 rounded-lg object-cover"
-                  />
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground">{product.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Size: {selectedSize} | Qty: {quantity}
-                    </p>
-                    <p className="mt-1 font-bold text-primary">
-                      ৳{totalPrice.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Full Name *
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-foreground">
-                    Full Name *
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
-                </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Phone Number *
+                </label>
+                <Input
+                  type="tel"
+                  placeholder="01XXXXXXXXX"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  required
+                />
+              </div>
 
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-foreground">
-                    Phone Number *
-                  </label>
-                  <Input
-                    type="tel"
-                    placeholder="01XXXXXXXXX"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    required
-                  />
-                </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium text-foreground">
+                  Delivery Address *
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Enter your full address"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  required
+                />
+              </div>
 
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-foreground">
-                    Delivery Address *
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="Enter your full address"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  variant="gold"
-                  size="lg"
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Placing Order...
-                    </>
-                  ) : (
-                    <>
-                      <Package className="h-4 w-4" />
-                      Confirm Order
-                    </>
-                  )}
-                </Button>
-              </form>
-            </div>
-          )}
+              <Button
+                type="submit"
+                variant="gold"
+                size="lg"
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Placing Order...
+                  </>
+                ) : (
+                  <>
+                    <Package className="h-4 w-4" />
+                    Confirm Order
+                  </>
+                )}
+              </Button>
+            </form>
+          </div>
         </div>
       </div>
     </>

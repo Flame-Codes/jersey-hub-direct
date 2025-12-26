@@ -5,6 +5,7 @@ export interface Product {
   price: number;
   discount: number;
   image: string;
+  images?: string[];
   sizes: string[];
   stock: boolean;
   featured?: boolean;

@@ -43,7 +43,7 @@ const Header = ({ onMenuClick, searchQuery, onSearchChange }: HeaderProps) => {
             </div>
             <div className="hidden sm:block">
               <h1 className="font-display text-xl tracking-wide text-foreground">
-                JERSEY<span className="text-primary">STORE</span>
+                JERSEY<span className="text-primary">HUB</span>
               </h1>
             </div>
           </a>
