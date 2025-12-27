@@ -44,41 +44,42 @@ const CategoryDrawer = ({
       {/* Drawer */}
       <aside
         className={cn(
-          'fixed left-0 top-0 z-50 h-full w-[280px] border-r border-border bg-card shadow-2xl transition-transform duration-300 ease-out',
+          'fixed left-0 top-0 z-50 h-full w-[280px] border-r border-border bg-background transition-transform duration-200 ease-out',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-border p-4">
+        <div className="flex items-center justify-between border-b border-border px-4 py-4">
           <div className="flex items-center gap-2">
-            <Shirt className="h-5 w-5 text-primary" />
-            <h2 className="font-display text-lg tracking-wide">Categories</h2>
+            <Shirt className="h-5 w-5 text-foreground" strokeWidth={1.5} />
+            <h2 className="font-display text-base font-medium tracking-wide text-foreground">Categories</h2>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close menu">
-            <X className="h-5 w-5" />
+          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close menu" className="h-9 w-9 rounded-full hover:bg-secondary">
+            <X className="h-5 w-5" strokeWidth={1.5} />
           </Button>
         </div>
 
         {/* Categories List */}
-        <nav className="p-4">
-          <ul className="space-y-1">
+        <nav className="p-3">
+          <ul className="space-y-0.5">
             {categories.map((category) => (
               <li key={category}>
                 <button
                   onClick={() => handleCategoryClick(category)}
                   className={cn(
-                    'flex w-full items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-medium transition-all duration-200',
+                    'flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition-colors duration-150',
                     selectedCategory === category
-                      ? 'bg-primary text-primary-foreground'
+                      ? 'bg-foreground text-background font-medium'
                       : 'text-foreground hover:bg-secondary'
                   )}
                 >
                   <span>{category}</span>
                   <ChevronRight
                     className={cn(
-                      'h-4 w-4 transition-transform',
-                      selectedCategory === category && 'rotate-90'
+                      'h-4 w-4 opacity-50',
+                      selectedCategory === category && 'opacity-100'
                     )}
+                    strokeWidth={1.5}
                   />
                 </button>
               </li>
@@ -87,10 +88,9 @@ const CategoryDrawer = ({
         </nav>
 
         {/* Footer */}
-        <div className="absolute bottom-0 left-0 right-0 border-t border-border p-4">
-          <div className="text-center text-xs text-muted-foreground">
+        <div className="absolute bottom-0 left-0 right-0 border-t border-border px-4 py-3">
+          <div className="text-center text-[11px] text-muted-foreground">
             <p>© 2025 JerseyHub</p>
-            <p className="mt-1">All rights reserved</p>
           </div>
         </div>
       </aside>
