@@ -256,37 +256,35 @@ const ProductPage = () => {
             </div>
 
             {/* Product Details */}
-            <div className="space-y-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+            <div className="space-y-5">
+              {/* Category & Title */}
               <div>
-                <p className="text-sm font-semibold text-primary">{product.category}</p>
-                <h1 className="mt-2 text-2xl md:text-3xl font-display text-foreground">
+                <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">{product.category}</p>
+                <h1 className="mt-1.5 text-xl md:text-2xl font-semibold text-foreground leading-tight">
                   {product.name}
                 </h1>
               </div>
 
               {/* Price */}
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Price</p>
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className="text-2xl font-bold text-foreground">
-                    {discountedPrice.toLocaleString()} BDT
-                  </span>
-                  {product.discount > 0 && (
-                    <>
-                      <span className="text-lg text-muted-foreground line-through">
-                        {product.price.toLocaleString()} BDT
-                      </span>
-                      <span className="rounded-full bg-foreground text-background px-3 py-1 text-sm font-semibold">
-                        Save {(product.price - discountedPrice).toLocaleString()} BDT
-                      </span>
-                    </>
-                  )}
-                </div>
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <span className="text-2xl font-bold text-foreground">
+                  ৳{discountedPrice.toLocaleString()}
+                </span>
+                {product.discount > 0 && (
+                  <>
+                    <span className="text-base text-muted-foreground line-through">
+                      ৳{product.price.toLocaleString()}
+                    </span>
+                    <span className="text-xs font-medium text-muted-foreground bg-secondary px-2 py-0.5 rounded">
+                      Save ৳{(product.price - discountedPrice).toLocaleString()}
+                    </span>
+                  </>
+                )}
               </div>
 
               {/* Size Selector */}
-              <div className="space-y-3">
-                <label className="text-sm font-semibold text-foreground">Size</label>
+              <div className="space-y-2.5 pt-2">
+                <label className="text-xs font-medium text-foreground uppercase tracking-wide">Select Size</label>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((size) => (
                     <button
@@ -294,10 +292,10 @@ const ProductPage = () => {
                       type="button"
                       onClick={() => setSelectedSize(size)}
                       className={cn(
-                        "min-w-[56px] rounded-full border-2 px-5 py-2.5 text-sm font-semibold transition-all",
+                        "min-w-[48px] h-10 px-4 text-sm font-medium transition-all border",
                         selectedSize === size
                           ? "border-foreground bg-foreground text-background"
-                          : "border-border text-foreground hover:border-foreground/50 bg-background"
+                          : "border-border text-foreground hover:border-foreground bg-background"
                       )}
                     >
                       {size}
@@ -306,34 +304,34 @@ const ProductPage = () => {
                 </div>
               </div>
 
-              {/* Quantity Selector */}
-              <div className="flex items-center gap-4 pt-2">
-                <div className="flex items-center rounded-full border-2 border-border">
+              {/* Quantity & Add to Cart */}
+              <div className="flex items-center gap-3 pt-3">
+                <div className="flex items-center border border-border">
                   <button
                     type="button"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-12 h-12 flex items-center justify-center hover:bg-secondary transition-colors text-foreground rounded-l-full"
+                    className="w-10 h-10 flex items-center justify-center hover:bg-secondary transition-colors text-foreground"
                   >
-                    <Minus className="h-5 w-5" strokeWidth={2} />
+                    <Minus className="h-4 w-4" strokeWidth={1.5} />
                   </button>
-                  <span className="w-12 text-center text-lg font-semibold text-foreground border-x-2 border-border">
+                  <span className="w-10 text-center text-sm font-medium text-foreground border-x border-border">
                     {quantity}
                   </span>
                   <button
                     type="button"
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-12 h-12 flex items-center justify-center hover:bg-secondary transition-colors text-foreground rounded-r-full"
+                    className="w-10 h-10 flex items-center justify-center hover:bg-secondary transition-colors text-foreground"
                   >
-                    <Plus className="h-5 w-5" strokeWidth={2} />
+                    <Plus className="h-4 w-4" strokeWidth={1.5} />
                   </button>
                 </div>
                 <button
                   type="button"
                   onClick={handleAddToCart}
                   disabled={!product.stock}
-                  className="flex-1 rounded-full border-2 border-foreground bg-background py-3.5 text-sm font-bold uppercase tracking-wide text-foreground disabled:opacity-50 active:scale-[0.98] transition-all duration-200 touch-manipulation hover:bg-secondary"
+                  className="flex-1 h-10 border border-foreground bg-background text-sm font-medium uppercase tracking-wide text-foreground disabled:opacity-40 active:scale-[0.98] transition-all duration-150 touch-manipulation hover:bg-muted"
                 >
-                  ADD TO CART
+                  Add to Cart
                 </button>
               </div>
 
@@ -342,59 +340,79 @@ const ProductPage = () => {
                 type="button"
                 onClick={handleOrder}
                 disabled={!product.stock}
-                className="w-full rounded-full bg-foreground py-4 text-base font-bold uppercase tracking-wide text-background disabled:opacity-50 active:scale-[0.98] transition-all duration-200 touch-manipulation hover:bg-foreground/90"
+                className="w-full h-12 bg-foreground text-sm font-medium uppercase tracking-wide text-background disabled:opacity-40 active:scale-[0.98] transition-all duration-150 touch-manipulation hover:opacity-90"
               >
-                BUY NOW
+                Buy Now
               </button>
 
               {/* Product Features */}
-              <div className="space-y-2 pt-4 border-t border-border">
-                <p className="text-foreground">. Player edition Logo</p>
-                <p className="text-foreground">. Mash Fabric 170+ GSM</p>
-                <p className="text-foreground">. 100% Premium</p>
-                <p className="text-foreground">. High Quality Fabrics</p>
-                <p className="text-foreground">. Cash On Delivery Available</p>
+              <div className="pt-5 border-t border-border space-y-3">
+                <p className="text-xs font-medium text-foreground uppercase tracking-wide">Product Details</p>
+                <ul className="space-y-1.5 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-foreground"></span>
+                    Player edition Logo
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-foreground"></span>
+                    Mash Fabric 170+ GSM
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-foreground"></span>
+                    100% Premium Quality
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-foreground"></span>
+                    High Quality Fabrics
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-foreground"></span>
+                    Cash On Delivery Available
+                  </li>
+                </ul>
               </div>
 
               {/* Size Guide */}
-              <div className="space-y-2 pt-4 border-t border-border">
-                <p className="font-semibold text-foreground">Size :</p>
-                <p className="text-muted-foreground">M = Height 26 inches, Chest 38</p>
-                <p className="text-muted-foreground">L = Height 27 inches, Chest 40</p>
-                <p className="text-muted-foreground">XL = Height 28 inches, Chest 42</p>
-                <p className="text-muted-foreground">2xl = Height 30 inches, Chest 44</p>
+              <div className="pt-5 border-t border-border space-y-3">
+                <p className="text-xs font-medium text-foreground uppercase tracking-wide">Size Guide</p>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="flex justify-between text-muted-foreground"><span>M</span><span>26" × 38"</span></div>
+                  <div className="flex justify-between text-muted-foreground"><span>L</span><span>27" × 40"</span></div>
+                  <div className="flex justify-between text-muted-foreground"><span>XL</span><span>28" × 42"</span></div>
+                  <div className="flex justify-between text-muted-foreground"><span>2XL</span><span>30" × 44"</span></div>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Related Products */}
           {relatedProducts.length > 0 && (
-            <section className="mt-16 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-              <h2 className="mb-6 text-xl md:text-2xl font-display text-foreground">
+            <section className="mt-12 pt-8 border-t border-border">
+              <h2 className="mb-5 text-base font-medium text-foreground uppercase tracking-wide">
                 You May Also Like
               </h2>
-              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                 {relatedProducts.map((rp) => (
                   <Link
                     key={rp.id}
                     to={`/product/${rp.id}`}
-                    className="group card-interactive overflow-hidden"
+                    className="group block border border-border hover:border-foreground/20 transition-colors"
                   >
-                    <div className="aspect-square overflow-hidden">
+                    <div className="aspect-square overflow-hidden bg-muted">
                       <img
                         src={rp.image}
                         alt={rp.name}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                       />
                     </div>
-                    <div className="p-3">
-                      <p className="text-xs text-muted-foreground">{rp.category}</p>
-                      <h3 className="mt-1 font-medium text-foreground line-clamp-1 text-sm">
+                    <div className="p-2.5">
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{rp.category}</p>
+                      <h3 className="mt-0.5 font-medium text-foreground line-clamp-1 text-xs">
                         {rp.name}
                       </h3>
-                      <p className="mt-1 text-foreground font-bold">
-                        BDT {(rp.price - (rp.price * rp.discount) / 100).toLocaleString()}
+                      <p className="mt-1 text-sm font-semibold text-foreground">
+                        ৳{(rp.price - (rp.price * rp.discount) / 100).toLocaleString()}
                       </p>
                     </div>
                   </Link>
@@ -405,46 +423,47 @@ const ProductPage = () => {
         </main>
 
         {/* Mobile Sticky Bottom Bar */}
-        <div className="md:hidden sticky-bottom-bar p-4 z-50">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center rounded-full border-2 border-border bg-background">
-                <button
-                  type="button"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-10 h-10 flex items-center justify-center text-foreground"
-                >
-                  <Minus className="h-4 w-4" strokeWidth={2} />
-                </button>
-                <span className="w-8 text-center text-sm font-semibold text-foreground">
-                  {quantity}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="w-10 h-10 flex items-center justify-center text-foreground"
-                >
-                  <Plus className="h-4 w-4" strokeWidth={2} />
-                </button>
-              </div>
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border p-3 safe-bottom">
+          <div className="flex items-center gap-2">
+            {/* Quantity */}
+            <div className="flex items-center border border-border">
               <button
                 type="button"
-                onClick={handleAddToCart}
-                disabled={!product.stock}
-                className="flex-1 rounded-full border-2 border-foreground bg-background py-3 text-sm font-bold uppercase tracking-wide text-foreground disabled:opacity-50 active:scale-[0.98] transition-all touch-manipulation"
-                style={{ WebkitTapHighlightColor: 'transparent' }}
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="w-9 h-9 flex items-center justify-center text-foreground"
               >
-                ADD TO CART
+                <Minus className="h-3.5 w-3.5" strokeWidth={1.5} />
+              </button>
+              <span className="w-8 text-center text-sm font-medium text-foreground border-x border-border">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={() => setQuantity(quantity + 1)}
+                className="w-9 h-9 flex items-center justify-center text-foreground"
+              >
+                <Plus className="h-3.5 w-3.5" strokeWidth={1.5} />
               </button>
             </div>
+            {/* Add to Cart */}
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              disabled={!product.stock}
+              className="flex-1 h-10 border border-foreground bg-background text-xs font-medium uppercase tracking-wide text-foreground disabled:opacity-40 active:scale-[0.98] transition-all touch-manipulation"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
+            >
+              Add to Cart
+            </button>
+            {/* Buy Now */}
             <button
               type="button"
               onClick={handleOrder}
               disabled={!product.stock}
-              className="w-full rounded-full bg-foreground py-3.5 text-sm font-bold uppercase tracking-wide text-background disabled:opacity-50 active:scale-[0.98] transition-all touch-manipulation"
+              className="flex-1 h-10 bg-foreground text-xs font-medium uppercase tracking-wide text-background disabled:opacity-40 active:scale-[0.98] transition-all touch-manipulation"
               style={{ WebkitTapHighlightColor: 'transparent' }}
             >
-              BUY NOW
+              Buy Now
             </button>
           </div>
         </div>
