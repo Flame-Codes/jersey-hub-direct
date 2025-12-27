@@ -106,39 +106,39 @@ const OrderModal = ({ product, selectedSize, quantity, isOpen, onClose }: OrderM
           isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         )}
       >
-        <div className="mx-4 max-h-[90vh] overflow-y-auto rounded-2xl border border-border bg-card shadow-2xl">
+        <div className="mx-4 max-h-[90vh] overflow-y-auto rounded-lg border border-border bg-background">
           {/* Close Button */}
           <Button
             variant="ghost"
             size="icon"
             onClick={handleClose}
-            className="absolute right-4 top-4 z-10"
+            className="absolute right-3 top-3 z-10 h-8 w-8 text-muted-foreground hover:text-foreground"
             aria-label="Close modal"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </Button>
 
           {/* Order Form */}
-          <div className="p-6">
-            <h2 className="font-display text-2xl text-foreground">Place Order</h2>
+          <div className="p-5 md:p-6">
+            <h2 className="font-display text-xl text-foreground">Place Order</h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Cash on Delivery Only
             </p>
 
             {/* Order Summary */}
-            <div className="mt-6 rounded-lg bg-secondary p-4">
+            <div className="mt-5 rounded-lg border border-border p-4">
               <div className="flex gap-4">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="h-20 w-20 rounded-lg object-cover"
+                  className="h-20 w-20 rounded-lg object-cover border border-border"
                 />
                 <div className="flex-1">
-                  <h3 className="font-semibold text-foreground">{product.name}</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-medium text-foreground">{product.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
                     Size: {selectedSize} | Qty: {quantity}
                   </p>
-                  <p className="mt-1 font-bold text-primary">
+                  <p className="mt-2 font-semibold text-foreground">
                     ৳{totalPrice.toLocaleString()}
                   </p>
                 </div>
@@ -146,7 +146,7 @@ const OrderModal = ({ product, selectedSize, quantity, isOpen, onClose }: OrderM
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <form onSubmit={handleSubmit} className="mt-5 space-y-4">
               <div>
                 <label className="mb-2 block text-sm font-medium text-foreground">
                   Full Name *
@@ -156,6 +156,7 @@ const OrderModal = ({ product, selectedSize, quantity, isOpen, onClose }: OrderM
                   placeholder="Enter your full name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="h-11 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-foreground focus:ring-0 rounded-md"
                   required
                 />
               </div>
@@ -169,6 +170,7 @@ const OrderModal = ({ product, selectedSize, quantity, isOpen, onClose }: OrderM
                   placeholder="01XXXXXXXXX"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="h-11 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-foreground focus:ring-0 rounded-md"
                   required
                 />
               </div>
@@ -182,15 +184,15 @@ const OrderModal = ({ product, selectedSize, quantity, isOpen, onClose }: OrderM
                   placeholder="Enter your full address"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  className="h-11 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-foreground focus:ring-0 rounded-md"
                   required
                 />
               </div>
 
               <Button
                 type="submit"
-                variant="gold"
                 size="lg"
-                className="w-full"
+                className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background font-medium rounded-md gap-2"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (

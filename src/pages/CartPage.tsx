@@ -66,43 +66,43 @@ const CartPage = () => {
                   return (
                     <div
                       key={`${item.product.id}-${item.size}`}
-                      className="card-elevated p-4 flex gap-4 animate-slide-up"
+                      className="bg-background border border-border rounded-lg p-4 flex gap-4"
                     >
                       <Link to={`/product/${item.product.id}`}>
                         <img
                           src={productImage}
                           alt={item.product.name}
-                          className="w-20 h-20 md:w-24 md:h-24 rounded-xl object-cover"
+                          className="w-20 h-20 md:w-24 md:h-24 rounded-lg object-cover border border-border"
                         />
                       </Link>
 
                       <div className="flex-1 min-w-0">
                         <Link
                           to={`/product/${item.product.id}`}
-                          className="font-semibold text-foreground hover:text-primary transition-colors line-clamp-1"
+                          className="font-medium text-foreground hover:underline transition-colors line-clamp-1"
                         >
                           {item.product.name}
                         </Link>
                         <p className="text-sm text-muted-foreground mt-1">
                           Size: <span className="font-medium text-foreground">{item.size}</span>
                         </p>
-                        <p className="text-primary font-bold mt-1">
+                        <p className="text-foreground font-semibold mt-1">
                           ৳{discountedPrice.toLocaleString()}
                         </p>
 
                         {/* Quantity Controls */}
                         <div className="flex items-center gap-3 mt-3">
-                          <div className="flex items-center gap-1 bg-secondary rounded-lg p-0.5">
+                          <div className="flex items-center border border-border rounded-md">
                             <button
                               type="button"
                               onClick={() =>
                                 updateQuantity(item.product.id, item.size, item.quantity - 1)
                               }
-                              className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-background transition-colors text-foreground"
+                              className="w-8 h-8 flex items-center justify-center hover:bg-secondary transition-colors text-foreground"
                             >
-                              <Minus className="h-4 w-4" />
+                              <Minus className="h-3 w-3" />
                             </button>
-                            <span className="w-8 text-center font-semibold text-foreground">
+                            <span className="w-8 text-center font-medium text-foreground">
                               {item.quantity}
                             </span>
                             <button
@@ -110,16 +110,16 @@ const CartPage = () => {
                               onClick={() =>
                                 updateQuantity(item.product.id, item.size, item.quantity + 1)
                               }
-                              className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-background transition-colors text-foreground"
+                              className="w-8 h-8 flex items-center justify-center hover:bg-secondary transition-colors text-foreground"
                             >
-                              <Plus className="h-4 w-4" />
+                              <Plus className="h-3 w-3" />
                             </button>
                           </div>
 
                           <button
                             type="button"
                             onClick={() => removeFromCart(item.product.id, item.size)}
-                            className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                            className="p-2 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md transition-colors"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -127,7 +127,7 @@ const CartPage = () => {
                       </div>
 
                       <div className="text-right">
-                        <p className="font-bold text-foreground">
+                        <p className="font-semibold text-foreground">
                           ৳{itemTotal.toLocaleString()}
                         </p>
                       </div>
@@ -138,7 +138,7 @@ const CartPage = () => {
                 <button
                   type="button"
                   onClick={clearCart}
-                  className="text-sm text-destructive hover:underline"
+                  className="text-sm text-muted-foreground hover:text-foreground hover:underline transition-colors"
                 >
                   Clear Cart
                 </button>
@@ -146,8 +146,8 @@ const CartPage = () => {
 
               {/* Order Summary - Desktop */}
               <div className="hidden lg:block">
-                <div className="card-elevated p-6 sticky top-24">
-                  <h3 className="font-semibold text-foreground mb-4">Order Summary</h3>
+                <div className="border border-border rounded-lg p-6 sticky top-24">
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-4">Order Summary</h3>
 
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between text-muted-foreground">
@@ -156,26 +156,26 @@ const CartPage = () => {
                     </div>
                     <div className="flex justify-between text-muted-foreground">
                       <span>Delivery</span>
-                      <span className="text-success">Free</span>
+                      <span className="text-foreground">Free</span>
                     </div>
                     <div className="border-t border-border pt-3 flex justify-between text-lg font-bold text-foreground">
                       <span>Total</span>
-                      <span className="text-primary">৳{totalPrice.toLocaleString()}</span>
+                      <span>৳{totalPrice.toLocaleString()}</span>
                     </div>
                   </div>
 
                   <Button
                     type="button"
                     onClick={handleCheckout}
-                    className="w-full mt-6 btn-primary gap-2"
+                    className="w-full mt-6 h-12 bg-foreground hover:bg-foreground/90 text-background font-medium rounded-md gap-2"
                     size="lg"
                   >
-                    <ShoppingBag className="h-5 w-5" />
+                    <ShoppingBag className="h-4 w-4" />
                     Proceed to Checkout
                   </Button>
 
-                  <div className="mt-4 p-3 rounded-xl bg-success/10 border border-success/20 text-center">
-                    <p className="text-xs text-success font-medium">
+                  <div className="mt-4 p-3 rounded-lg border border-border text-center">
+                    <p className="text-xs text-muted-foreground font-medium">
                       💵 Cash on Delivery Available
                     </p>
                   </div>
@@ -187,20 +187,20 @@ const CartPage = () => {
 
         {/* Mobile Sticky Bottom Bar */}
         {items.length > 0 && (
-          <div className="lg:hidden sticky-bottom-bar p-4">
-            <div className="flex items-center justify-between mb-2">
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4">
+            <div className="flex items-center justify-between mb-3">
               <span className="text-sm text-muted-foreground">Total</span>
-              <span className="text-xl font-bold text-primary">
+              <span className="text-xl font-bold text-foreground">
                 ৳{totalPrice.toLocaleString()}
               </span>
             </div>
             <Button
               type="button"
               onClick={handleCheckout}
-              className="w-full btn-primary gap-2"
+              className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background font-medium rounded-md gap-2"
               size="lg"
             >
-              <ShoppingBag className="h-5 w-5" />
+              <ShoppingBag className="h-4 w-4" />
               Checkout ({items.reduce((s, i) => s + i.quantity, 0)} items)
             </Button>
           </div>
