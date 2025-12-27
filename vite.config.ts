@@ -6,11 +6,12 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",       // listen on all interfaces
+    host: "::", // listen on all interfaces
     port: 8080,
-  },
-  preview: {
-    allowedHosts: ['.onrender.com', 'localhost'], // allows deployed domain
+    allowedHosts: [
+      'jersey-hub-direct.onrender.com', // your Render deployment
+      'localhost',
+    ],
   },
   plugins: [
     react(),
