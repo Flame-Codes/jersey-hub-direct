@@ -6,11 +6,11 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Server-side validation schema
+// Server-side validation schema - relaxed for better UX
 const orderSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name too long").trim(),
-  phone: z.string().min(10, "Phone must be at least 10 digits").max(15, "Phone too long").trim(),
-  address: z.string().min(10, "Address must be at least 10 characters").max(300, "Address too long").trim(),
+  phone: z.string().min(5, "Phone must be at least 5 digits").max(20, "Phone too long").trim(),
+  address: z.string().min(5, "Address must be at least 5 characters").max(500, "Address too long").trim(),
   productName: z.string().min(1, "Product name required").max(200, "Product name too long"),
   category: z.string().max(100).optional(),
   quantity: z.number().int().positive().max(100, "Max quantity is 100"),
