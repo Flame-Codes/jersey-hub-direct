@@ -1,5 +1,5 @@
-const TELEGRAM_BOT_TOKEN = "7717939554:AAGTywwmtfeS2LY9h7x7A327TTuWsn4tv2A";
-const TELEGRAM_CHAT_ID = "6078665585";
+import { supabase } from "@/integrations/supabase/client";
+
 const WHATSAPP_NUMBER = "8801952081184";
 
 export interface OrderData {
@@ -14,44 +14,17 @@ export interface OrderData {
 }
 
 export const sendOrderToTelegram = async (order: OrderData): Promise<boolean> => {
-  const message = `
-🛒 *New Order Received!*
-
-👤 *Customer Details:*
-━━━━━━━━━━━━━━━━━━
-📛 Name: ${order.name}
-📞 Phone: ${order.phone}
-📍 Address: ${order.address}
-
-🏷️ *Product Details:*
-━━━━━━━━━━━━━━━━━━
-👕 Product: ${order.productName}
-📂 Category: ${order.category}
-📏 Size: ${order.size}
-🔢 Quantity: ${order.quantity}
-💰 Price: ৳${order.price.toLocaleString()}
-
-⏰ Time: ${new Date().toLocaleString('en-BD', { timeZone: 'Asia/Dhaka' })}
-━━━━━━━━━━━━━━━━━━
-`;
-
   try {
-    const response = await fetch(
-      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: message,
-          parse_mode: "Markdown",
-        }),
-      }
-    );
+    const { data, error } = await supabase.functions.invoke('send-order', {
+      body: order
+    });
 
-    return response.ok;
+    if (error) {
+      console.error("Failed to send order:", error);
+      return false;
+    }
+
+    return data?.success === true;
   } catch (error) {
     console.error("Failed to send order to Telegram:", error);
     return false;
