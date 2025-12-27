@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { ArrowLeft, Minus, Plus, MessageCircle, Send } from 'lucide-react';
+import { ArrowLeft, Minus, Plus, Send } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Product } from '@/types/product';
-import { sendOrderToTelegram, getWhatsAppLink, WHATSAPP_DISPLAY_NUMBER } from '@/utils/telegram';
+import { sendOrderToTelegram } from '@/utils/telegram';
 import { useToast } from '@/hooks/use-toast';
 import { getJerseyImage } from '@/assets/jerseys';
 import { useCart, CartItem } from '@/contexts/CartContext';
@@ -37,7 +37,6 @@ const OrderPage = () => {
     address: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderPlaced, setOrderPlaced] = useState(false);
 
   useEffect(() => {
     const state = location.state as OrderState;
@@ -132,90 +131,29 @@ const OrderPage = () => {
     }
 
     setIsSubmitting(false);
-    setOrderPlaced(true);
     
     toast({
       title: 'Order Placed Successfully!',
       description: 'We will contact you shortly via WhatsApp.',
     });
+
+    // Navigate to order confirmation page with order details
+    const orderId = `JH${Date.now().toString().slice(-8)}`;
+    navigate('/order-confirmation', {
+      state: {
+        orderDetails: {
+          name: formData.name.trim(),
+          phone: formData.phone.trim(),
+          address: formData.address.trim(),
+          productName: orderItems.map(i => i.product.name).join(', '),
+          size: orderItems.map(i => i.size).join(', '),
+          quantity: orderItems.reduce((s, i) => s + i.quantity, 0),
+          price: totalPrice,
+          orderId,
+        }
+      }
+    });
   };
-
-  const handleWhatsAppConfirmation = () => {
-    // Simple confirmation message only - NO full order details
-    const confirmationMessage = `✅ Hi! I just placed an order on JerseyHub. Order Total: ৳${totalPrice.toLocaleString()}. Please confirm my order.`;
-    const whatsappLink = getWhatsAppLink(confirmationMessage);
-    window.open(whatsappLink, '_blank', 'noopener,noreferrer');
-  };
-
-  if (orderPlaced) {
-    return (
-      <HelmetProvider>
-        <div className="min-h-screen bg-background">
-          <SEO title="Order Placed | JerseyHub" description="Your order has been placed successfully" />
-          
-          <main className="container py-12">
-            <div className="max-w-md mx-auto text-center">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-foreground flex items-center justify-center">
-                <Send className="w-7 h-7 text-foreground" />
-              </div>
-              
-              <h1 className="text-2xl md:text-3xl font-display text-foreground mb-3">
-                Order Placed Successfully!
-              </h1>
-              
-              <p className="text-muted-foreground mb-8">
-                Your order has been sent to our team. We will contact you shortly via WhatsApp to confirm your order.
-              </p>
-
-              <div className="border border-border rounded-lg p-5 mb-6 text-left">
-                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-4">Order Summary</h3>
-                {orderItems.map((item, index) => (
-                  <div key={index} className="flex justify-between text-sm py-3 border-b border-border last:border-0">
-                    <span className="text-muted-foreground">
-                      {item.product.name} ({item.size}) x{item.quantity}
-                    </span>
-                    <span className="text-foreground font-medium">
-                      ৳{((item.product.price * (1 - item.product.discount / 100)) * item.quantity).toLocaleString()}
-                    </span>
-                  </div>
-                ))}
-                <div className="flex justify-between pt-4 text-lg font-bold">
-                  <span className="text-foreground">Total</span>
-                  <span className="text-foreground">৳{totalPrice.toLocaleString()}</span>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <Button
-                  type="button"
-                  onClick={handleWhatsAppConfirmation}
-                  className="w-full h-12 bg-[hsl(var(--whatsapp))] hover:bg-[hsl(142,70%,40%)] text-white font-medium rounded-md gap-2"
-                  size="lg"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  Confirm on WhatsApp
-                </Button>
-                
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => navigate('/')}
-                  className="w-full h-12 bg-background border-foreground text-foreground hover:bg-secondary font-medium rounded-md"
-                  size="lg"
-                >
-                  Continue Shopping
-                </Button>
-              </div>
-
-              <p className="mt-8 text-xs text-muted-foreground">
-                Need help? Call us at {WHATSAPP_DISPLAY_NUMBER}
-              </p>
-            </div>
-          </main>
-        </div>
-      </HelmetProvider>
-    );
-  }
 
   return (
     <HelmetProvider>
