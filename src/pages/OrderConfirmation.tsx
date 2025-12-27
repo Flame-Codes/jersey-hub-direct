@@ -3,13 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { 
   CheckCircle, MessageCircle, Home, ShoppingBag, Package, 
-  Calendar, CreditCard, User, Phone, MapPin, ArrowRight, ExternalLink 
+  Calendar, CreditCard, User, Phone, MapPin 
 } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { getWhatsAppLink, WHATSAPP_DISPLAY_NUMBER } from '@/utils/telegram';
 
 const OrderConfirmation = () => {
@@ -38,26 +37,26 @@ const OrderConfirmation = () => {
   // Simple confirmation message for WhatsApp (no order details)
   const whatsAppConfirmMessage = "✅ My order has been confirmed. Looking forward to receiving it soon!";
 
-  // Loading Skeleton Component
+  // Loading Skeleton Component with Tailwind animate-pulse and bg-gray-200
   const LoadingSkeleton = () => (
     <>
       {/* Loading Success Indicator */}
       <div className="text-center mb-8">
-        <Skeleton className="h-20 w-20 rounded-full mx-auto mb-6" />
-        <Skeleton className="h-8 w-56 mx-auto mb-2" />
-        <Skeleton className="h-4 w-72 mx-auto" />
+        <div className="h-20 w-20 rounded-full mx-auto mb-6 bg-gray-200 animate-pulse" />
+        <div className="h-8 w-56 mx-auto mb-2 bg-gray-200 animate-pulse rounded-lg" />
+        <div className="h-4 w-72 mx-auto bg-gray-200 animate-pulse rounded-lg" />
       </div>
 
       {/* Loading Order Details Card */}
-      <div className="mb-6 rounded-lg border border-border bg-background p-5">
-        <Skeleton className="h-4 w-24 mb-4" />
+      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-5 animate-pulse">
+        <div className="h-4 w-24 mb-4 bg-gray-200 rounded" />
         <div className="grid grid-cols-2 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="flex items-start gap-3">
-              <Skeleton className="h-5 w-5 rounded" />
+              <div className="h-5 w-5 rounded bg-gray-200" />
               <div className="flex-1">
-                <Skeleton className="h-3 w-16 mb-1" />
-                <Skeleton className="h-4 w-24" />
+                <div className="h-3 w-16 mb-1 bg-gray-200 rounded" />
+                <div className="h-4 w-24 bg-gray-200 rounded" />
               </div>
             </div>
           ))}
@@ -65,28 +64,28 @@ const OrderConfirmation = () => {
       </div>
 
       {/* Loading Product Summary */}
-      <div className="mb-6 rounded-lg border border-border bg-background p-5">
-        <Skeleton className="h-4 w-32 mb-4" />
+      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-5 animate-pulse">
+        <div className="h-4 w-32 mb-4 bg-gray-200 rounded" />
         <div className="space-y-3">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="flex justify-between">
-              <Skeleton className="h-4 w-20" />
-              <Skeleton className="h-4 w-32" />
+              <div className="h-4 w-20 bg-gray-200 rounded" />
+              <div className="h-4 w-32 bg-gray-200 rounded" />
             </div>
           ))}
         </div>
       </div>
 
       {/* Loading Customer Info */}
-      <div className="mb-6 rounded-lg border border-border bg-background p-5">
-        <Skeleton className="h-4 w-40 mb-4" />
+      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-5 animate-pulse">
+        <div className="h-4 w-40 mb-4 bg-gray-200 rounded" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-start gap-3">
-              <Skeleton className="h-5 w-5 rounded" />
+              <div className="h-5 w-5 rounded bg-gray-200" />
               <div className="flex-1">
-                <Skeleton className="h-3 w-16 mb-1" />
-                <Skeleton className="h-4 w-32" />
+                <div className="h-3 w-16 mb-1 bg-gray-200 rounded" />
+                <div className="h-4 w-32 bg-gray-200 rounded" />
               </div>
             </div>
           ))}
@@ -94,21 +93,21 @@ const OrderConfirmation = () => {
       </div>
 
       {/* Loading WhatsApp Card */}
-      <div className="mb-6 rounded-lg border border-border bg-background p-5">
+      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-5 animate-pulse">
         <div className="flex items-center gap-3 mb-3">
-          <Skeleton className="h-10 w-10 rounded-full" />
+          <div className="h-10 w-10 rounded-full bg-gray-200" />
           <div>
-            <Skeleton className="h-4 w-24 mb-1" />
-            <Skeleton className="h-3 w-32" />
+            <div className="h-4 w-24 mb-1 bg-gray-200 rounded" />
+            <div className="h-3 w-32 bg-gray-200 rounded" />
           </div>
         </div>
-        <Skeleton className="h-11 w-full rounded-md" />
+        <div className="h-11 w-full rounded-md bg-gray-200" />
       </div>
 
       {/* Loading Buttons */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <Skeleton className="h-12 flex-1 rounded-md" />
-        <Skeleton className="h-12 flex-1 rounded-md" />
+        <div className="h-12 flex-1 rounded-md bg-gray-200 animate-pulse" />
+        <div className="h-12 flex-1 rounded-md bg-gray-200 animate-pulse" />
       </div>
     </>
   );
@@ -138,9 +137,17 @@ const OrderConfirmation = () => {
                   <h1 className="font-display text-2xl md:text-3xl font-semibold text-foreground mb-2">
                     Order Confirmed
                   </h1>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground mb-3">
                     Thank you for your purchase. Your order has been received.
                   </p>
+                  {/* Track Order Link - Blue text with hover underline */}
+                  <Link 
+                    to={`/receipt/${orderId}`}
+                    state={{ orderDetails }}
+                    className="inline-flex items-center gap-1 text-blue-600 hover:underline font-medium text-sm"
+                  >
+                    Track your order here &gt;&gt;
+                  </Link>
                 </div>
 
                 {/* Order Status Card */}
@@ -181,22 +188,6 @@ const OrderConfirmation = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Track Order Link */}
-                <Link 
-                  to={`/receipt/${orderId}`}
-                  state={{ orderDetails }}
-                  className="mb-6 flex items-center justify-between rounded-lg border border-border bg-secondary/30 p-4 hover:bg-secondary/50 transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <ExternalLink className="h-5 w-5 text-muted-foreground" strokeWidth={1.5} />
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Track your order</p>
-                      <p className="text-xs text-muted-foreground">View full receipt and order details</p>
-                    </div>
-                  </div>
-                  <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-                </Link>
 
                 {/* Product & Customer Information */}
                 {orderDetails && (
