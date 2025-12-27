@@ -1,1 +1,4 @@
 project_id = "feqqqeabuhukvuomomyb"
+
+[functions.send-order]
+verify_jwt = false
