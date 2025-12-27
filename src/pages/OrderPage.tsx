@@ -155,22 +155,22 @@ const OrderPage = () => {
           
           <main className="container py-12">
             <div className="max-w-md mx-auto text-center">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-success/10 flex items-center justify-center">
-                <Send className="w-10 h-10 text-success" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full border-2 border-foreground flex items-center justify-center">
+                <Send className="w-7 h-7 text-foreground" />
               </div>
               
-              <h1 className="text-2xl md:text-3xl font-display text-foreground mb-4">
+              <h1 className="text-2xl md:text-3xl font-display text-foreground mb-3">
                 Order Placed Successfully!
               </h1>
               
-              <p className="text-muted-foreground mb-6">
+              <p className="text-muted-foreground mb-8">
                 Your order has been sent to our team. We will contact you shortly via WhatsApp to confirm your order.
               </p>
 
-              <div className="card-elevated p-6 mb-6 text-left">
-                <h3 className="font-semibold text-foreground mb-3">Order Summary</h3>
+              <div className="border border-border rounded-lg p-5 mb-6 text-left">
+                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-4">Order Summary</h3>
                 {orderItems.map((item, index) => (
-                  <div key={index} className="flex justify-between text-sm py-2 border-b border-border last:border-0">
+                  <div key={index} className="flex justify-between text-sm py-3 border-b border-border last:border-0">
                     <span className="text-muted-foreground">
                       {item.product.name} ({item.size}) x{item.quantity}
                     </span>
@@ -179,9 +179,9 @@ const OrderPage = () => {
                     </span>
                   </div>
                 ))}
-                <div className="flex justify-between pt-3 text-lg font-bold">
+                <div className="flex justify-between pt-4 text-lg font-bold">
                   <span className="text-foreground">Total</span>
-                  <span className="text-primary">৳{totalPrice.toLocaleString()}</span>
+                  <span className="text-foreground">৳{totalPrice.toLocaleString()}</span>
                 </div>
               </div>
 
@@ -189,7 +189,7 @@ const OrderPage = () => {
                 <Button
                   type="button"
                   onClick={handleWhatsAppConfirmation}
-                  className="w-full bg-[hsl(var(--whatsapp))] hover:bg-[hsl(142,70%,40%)] text-white gap-2"
+                  className="w-full h-12 bg-[hsl(var(--whatsapp))] hover:bg-[hsl(142,70%,40%)] text-white font-medium rounded-md gap-2"
                   size="lg"
                 >
                   <MessageCircle className="h-5 w-5" />
@@ -200,14 +200,14 @@ const OrderPage = () => {
                   type="button"
                   variant="outline"
                   onClick={() => navigate('/')}
-                  className="w-full"
+                  className="w-full h-12 bg-background border-foreground text-foreground hover:bg-secondary font-medium rounded-md"
                   size="lg"
                 >
                   Continue Shopping
                 </Button>
               </div>
 
-              <p className="mt-6 text-xs text-muted-foreground">
+              <p className="mt-8 text-xs text-muted-foreground">
                 Need help? Call us at {WHATSAPP_DISPLAY_NUMBER}
               </p>
             </div>
@@ -237,40 +237,41 @@ const OrderPage = () => {
           </button>
 
           <div className="max-w-2xl mx-auto">
-            <h1 className="text-2xl md:text-3xl font-display text-foreground mb-6">
+            <h1 className="text-2xl md:text-3xl font-display text-foreground mb-8">
               Complete Your Order
             </h1>
 
             {/* Product Summary */}
-            <div className="card-elevated p-4 md:p-6 mb-6 animate-slide-up space-y-4">
+            <div className="bg-background border border-border rounded-lg p-5 md:p-6 mb-8 space-y-5">
+              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Order Items</h3>
               {orderItems.map((item, index) => {
                 const discountedPrice = item.product.price * (1 - item.product.discount / 100);
                 const itemTotal = discountedPrice * item.quantity;
 
                 return (
-                  <div key={`${item.product.id}-${item.size}-${index}`} className="border-b border-border pb-4 last:border-0 last:pb-0">
+                  <div key={`${item.product.id}-${item.size}-${index}`} className="border-b border-border pb-5 last:border-0 last:pb-0">
                     <div className="flex gap-4">
                       <img
                         src={item.product.image}
                         alt={item.product.name}
-                        className="w-20 h-20 md:w-24 md:h-24 rounded-xl object-cover"
+                        className="w-20 h-20 md:w-24 md:h-24 rounded-lg object-cover border border-border"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-primary font-medium">{item.product.category}</p>
-                        <h2 className="font-semibold text-foreground mt-1 truncate">{item.product.name}</h2>
+                        <p className="text-xs text-muted-foreground uppercase tracking-wide">{item.product.category}</p>
+                        <h2 className="font-medium text-foreground mt-1 truncate">{item.product.name}</h2>
                         
                         {/* Size Selector */}
-                        <div className="mt-2">
+                        <div className="mt-3">
                           <div className="flex flex-wrap gap-1.5">
                             {item.product.sizes.map((size) => (
                               <button
                                 key={size}
                                 type="button"
                                 onClick={() => updateItemSize(index, size)}
-                                className={`min-w-[36px] px-2 py-1 text-xs font-medium rounded-lg border-2 transition-all ${
+                                className={`min-w-[36px] px-2.5 py-1 text-xs font-medium rounded-md border transition-all ${
                                   item.size === size
-                                    ? 'border-primary bg-primary text-primary-foreground'
-                                    : 'border-border text-foreground hover:border-primary/50'
+                                    ? 'border-foreground bg-foreground text-background'
+                                    : 'border-border text-foreground hover:border-foreground'
                                 }`}
                               >
                                 {size}
@@ -280,27 +281,25 @@ const OrderPage = () => {
                         </div>
 
                         {/* Quantity & Price */}
-                        <div className="flex items-center justify-between mt-3">
-                          <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-1 bg-secondary rounded-lg p-0.5">
-                              <button
-                                type="button"
-                                onClick={() => updateItemQuantity(index, item.quantity - 1)}
-                                className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-background transition-colors text-foreground"
-                              >
-                                <Minus className="h-3 w-3" />
-                              </button>
-                              <span className="w-6 text-center font-semibold text-sm text-foreground">{item.quantity}</span>
-                              <button
-                                type="button"
-                                onClick={() => updateItemQuantity(index, item.quantity + 1)}
-                                className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-background transition-colors text-foreground"
-                              >
-                                <Plus className="h-3 w-3" />
-                              </button>
-                            </div>
+                        <div className="flex items-center justify-between mt-4">
+                          <div className="flex items-center border border-border rounded-md">
+                            <button
+                              type="button"
+                              onClick={() => updateItemQuantity(index, item.quantity - 1)}
+                              className="w-8 h-8 flex items-center justify-center hover:bg-secondary transition-colors text-foreground"
+                            >
+                              <Minus className="h-3 w-3" />
+                            </button>
+                            <span className="w-8 text-center font-medium text-sm text-foreground">{item.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() => updateItemQuantity(index, item.quantity + 1)}
+                              className="w-8 h-8 flex items-center justify-center hover:bg-secondary transition-colors text-foreground"
+                            >
+                              <Plus className="h-3 w-3" />
+                            </button>
                           </div>
-                          <p className="text-lg font-bold text-primary">৳{itemTotal.toLocaleString()}</p>
+                          <p className="text-lg font-semibold text-foreground">৳{itemTotal.toLocaleString()}</p>
                         </div>
                       </div>
                     </div>
@@ -309,17 +308,17 @@ const OrderPage = () => {
               })}
 
               {/* Total */}
-              <div className="pt-4 border-t border-border flex justify-between items-center">
+              <div className="pt-5 border-t border-border flex justify-between items-center">
                 <span className="text-muted-foreground">Total ({orderItems.reduce((s, i) => s + i.quantity, 0)} items)</span>
-                <span className="text-2xl font-bold text-primary">৳{totalPrice.toLocaleString()}</span>
+                <span className="text-2xl font-bold text-foreground">৳{totalPrice.toLocaleString()}</span>
               </div>
             </div>
 
             {/* Order Form */}
-            <form onSubmit={handleSubmit} className="card-elevated p-4 md:p-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              <h3 className="font-semibold text-foreground mb-4">Delivery Information</h3>
+            <form onSubmit={handleSubmit} className="bg-background border border-border rounded-lg p-5 md:p-6">
+              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide mb-5">Delivery Information</h3>
               
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
                     Full Name *
@@ -329,7 +328,7 @@ const OrderPage = () => {
                     placeholder="Enter your full name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="input-modern"
+                    className="h-11 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-foreground focus:ring-0 focus:ring-offset-0 rounded-md"
                     required
                   />
                 </div>
@@ -343,7 +342,7 @@ const OrderPage = () => {
                     placeholder="01XXXXXXXXX"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="input-modern"
+                    className="h-11 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-foreground focus:ring-0 focus:ring-offset-0 rounded-md"
                     required
                   />
                 </div>
@@ -357,22 +356,22 @@ const OrderPage = () => {
                     placeholder="Enter your full address"
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    className="input-modern"
+                    className="h-11 bg-background border-border text-foreground placeholder:text-muted-foreground focus:border-foreground focus:ring-0 focus:ring-offset-0 rounded-md"
                     required
                   />
                 </div>
               </div>
 
               {/* COD Notice */}
-              <div className="mt-6 p-4 rounded-xl bg-success/10 border border-success/20">
-                <p className="text-sm text-success font-medium flex items-center gap-2">
+              <div className="mt-6 p-4 rounded-lg bg-secondary border border-border">
+                <p className="text-sm text-foreground font-medium flex items-center gap-2">
                   <span>💵</span>
-                  Cash on Delivery - Pay when you receive
+                  Cash on Delivery — Pay when you receive
                 </p>
               </div>
 
               {/* Info about order flow */}
-              <div className="mt-4 p-4 rounded-xl bg-primary/5 border border-primary/10">
+              <div className="mt-4 p-4 rounded-lg border border-border">
                 <p className="text-sm text-muted-foreground">
                   <strong className="text-foreground">How it works:</strong> Your order will be sent to our team. We'll contact you via WhatsApp to confirm delivery details.
                 </p>
@@ -381,7 +380,7 @@ const OrderPage = () => {
               {/* Desktop Submit Button */}
               <Button
                 type="submit"
-                className="hidden md:flex w-full mt-6 btn-primary gap-2 active:scale-[0.98] transition-transform touch-manipulation"
+                className="hidden md:flex w-full mt-6 h-12 bg-foreground hover:bg-foreground/90 text-background font-medium rounded-md gap-2 active:scale-[0.98] transition-all"
                 size="lg"
                 disabled={isSubmitting}
               >
@@ -392,7 +391,7 @@ const OrderPage = () => {
                   </>
                 ) : (
                   <>
-                    <Send className="h-5 w-5 shrink-0" />
+                    <Send className="h-4 w-4 shrink-0" />
                     Place Order • ৳{totalPrice.toLocaleString()}
                   </>
                 )}
@@ -402,7 +401,7 @@ const OrderPage = () => {
         </main>
 
         {/* Mobile Sticky Bottom Bar */}
-        <div className="md:hidden sticky-bottom-bar p-4 z-50">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 z-50">
           <Button
             type="button"
             onClick={(e) => {
@@ -410,7 +409,7 @@ const OrderPage = () => {
               e.stopPropagation();
               handleSubmit(e as any);
             }}
-            className="w-full btn-primary gap-2 active:scale-[0.98] transition-transform touch-manipulation select-none"
+            className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background font-medium rounded-md gap-2 active:scale-[0.98] transition-all select-none"
             size="lg"
             disabled={isSubmitting}
             style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -422,7 +421,7 @@ const OrderPage = () => {
               </>
             ) : (
               <>
-                <Send className="h-5 w-5 shrink-0" />
+                <Send className="h-4 w-4 shrink-0" />
                 Place Order • ৳{totalPrice.toLocaleString()}
               </>
             )}
