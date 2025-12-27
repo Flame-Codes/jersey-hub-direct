@@ -1,15 +1,28 @@
 import { Link, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { CheckCircle, MessageCircle, Home, ShoppingBag } from 'lucide-react';
+import { CheckCircle, MessageCircle, Home, ShoppingBag, Package, Calendar, CreditCard, User, Phone, MapPin } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
-import { getWhatsAppLink } from '@/utils/telegram';
+import { getWhatsAppLink, WHATSAPP_DISPLAY_NUMBER } from '@/utils/telegram';
 
 const OrderConfirmation = () => {
   const location = useLocation();
   const orderDetails = location.state?.orderDetails;
+
+  // Generate order ID and date
+  const orderId = `JH${Date.now().toString().slice(-8)}`;
+  const orderDate = new Date().toLocaleDateString('en-BD', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  // Simple confirmation message for WhatsApp (no order details)
+  const whatsAppConfirmMessage = "✅ My order has been confirmed. Looking forward to receiving it soon!";
 
   return (
     <HelmetProvider>
@@ -21,84 +34,166 @@ const OrderConfirmation = () => {
 
         <Header onMenuClick={() => {}} searchQuery="" onSearchChange={() => {}} />
 
-        <main className="container py-16">
-          <div className="mx-auto max-w-lg text-center">
-            {/* Success Icon */}
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-green-500/10">
-              <CheckCircle className="h-12 w-12 text-green-500" />
+        <main className="container py-8 md:py-12">
+          <div className="mx-auto max-w-2xl">
+            
+            {/* Success Indicator Section */}
+            <div className="text-center mb-8">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-foreground bg-background">
+                <CheckCircle className="h-10 w-10 text-foreground" strokeWidth={1.5} />
+              </div>
+              <h1 className="font-display text-2xl md:text-3xl font-semibold text-foreground mb-2">
+                Order Confirmed
+              </h1>
+              <p className="text-muted-foreground">
+                Thank you for your purchase. Your order has been received.
+              </p>
             </div>
 
-            {/* Success Message */}
-            <h1 className="font-display text-3xl md:text-4xl text-foreground mb-4">
-              Order Placed Successfully!
-            </h1>
-            
-            <p className="text-lg text-muted-foreground mb-8">
-              Thank you for your order! Our team will contact you shortly via WhatsApp to confirm your order.
-            </p>
-
-            {/* Order Details Card */}
-            {orderDetails && (
-              <div className="mb-8 rounded-2xl bg-card border border-border p-6 text-left">
-                <h2 className="font-semibold text-foreground mb-4">Order Summary</h2>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Product:</span>
-                    <span className="text-foreground font-medium">{orderDetails.productName}</span>
+            {/* Order Status Card */}
+            <div className="mb-6 rounded-lg border border-border bg-background p-5">
+              <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wide">
+                Order Details
+              </h2>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-start gap-3">
+                  <Package className="h-5 w-5 text-muted-foreground mt-0.5" strokeWidth={1.5} />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Order ID</p>
+                    <p className="text-sm font-medium text-foreground">{orderId}</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Size:</span>
-                    <span className="text-foreground">{orderDetails.size}</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" strokeWidth={1.5} />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Order Date</p>
+                    <p className="text-sm font-medium text-foreground">{orderDate}</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Quantity:</span>
-                    <span className="text-foreground">{orderDetails.quantity}</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CreditCard className="h-5 w-5 text-muted-foreground mt-0.5" strokeWidth={1.5} />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Payment Method</p>
+                    <p className="text-sm font-medium text-foreground">Cash on Delivery</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Customer:</span>
-                    <span className="text-foreground">{orderDetails.name}</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="h-5 w-5 flex items-center justify-center mt-0.5">
+                    <span className="h-2.5 w-2.5 rounded-full bg-green-500"></span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Phone:</span>
-                    <span className="text-foreground">{orderDetails.phone}</span>
-                  </div>
-                  <div className="border-t border-border pt-3 mt-3 flex justify-between">
-                    <span className="text-foreground font-semibold">Total:</span>
-                    <span className="text-primary font-bold text-lg">
-                      ৳{orderDetails.price.toLocaleString()}
-                    </span>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Status</p>
+                    <p className="text-sm font-medium text-green-600">Confirmed</p>
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* Product & Customer Information */}
+            {orderDetails && (
+              <>
+                {/* Product Summary */}
+                <div className="mb-6 rounded-lg border border-border bg-background p-5">
+                  <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wide">
+                    Product Summary
+                  </h2>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Product</span>
+                      <span className="text-foreground font-medium text-right max-w-[60%]">{orderDetails.productName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Size</span>
+                      <span className="text-foreground">{orderDetails.size}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Quantity</span>
+                      <span className="text-foreground">{orderDetails.quantity}</span>
+                    </div>
+                    <div className="border-t border-border pt-3 mt-3 flex justify-between">
+                      <span className="text-foreground font-semibold">Total</span>
+                      <span className="text-foreground font-bold text-lg">
+                        ৳{orderDetails.price.toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Customer Information */}
+                <div className="mb-6 rounded-lg border border-border bg-background p-5">
+                  <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wide">
+                    Customer Information
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-start gap-3">
+                      <User className="h-5 w-5 text-muted-foreground mt-0.5" strokeWidth={1.5} />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Name</p>
+                        <p className="text-sm font-medium text-foreground">{orderDetails.name}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Phone className="h-5 w-5 text-muted-foreground mt-0.5" strokeWidth={1.5} />
+                      <div>
+                        <p className="text-xs text-muted-foreground">Phone</p>
+                        <p className="text-sm font-medium text-foreground">{orderDetails.phone}</p>
+                      </div>
+                    </div>
+                    {orderDetails.address && (
+                      <div className="flex items-start gap-3 md:col-span-2">
+                        <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" strokeWidth={1.5} />
+                        <div>
+                          <p className="text-xs text-muted-foreground">Delivery Address</p>
+                          <p className="text-sm font-medium text-foreground">{orderDetails.address}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
             )}
 
-            {/* WhatsApp Contact */}
-            <div className="mb-8 rounded-xl bg-green-500/10 border border-green-500/20 p-4">
-              <p className="text-sm text-muted-foreground mb-3">
-                Have questions about your order? Contact us on WhatsApp:
-              </p>
+            {/* WhatsApp Contact Card */}
+            <div className="mb-6 rounded-lg border border-border bg-background p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="h-10 w-10 rounded-full bg-[#25D366] flex items-center justify-center">
+                  <MessageCircle className="h-5 w-5 text-white" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Need Help?</p>
+                  <p className="text-xs text-muted-foreground">Chat with us on WhatsApp</p>
+                </div>
+              </div>
               <a
-                href={getWhatsAppLink()}
+                href={getWhatsAppLink(whatsAppConfirmMessage)}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="block"
               >
-                <Button variant="whatsapp" className="gap-2">
-                  <MessageCircle className="h-5 w-5" />
-                  Chat on WhatsApp: 01952081184
+                <Button 
+                  className="w-full h-11 bg-[#25D366] hover:bg-[#22c55e] text-white font-medium rounded-md gap-2"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Chat on WhatsApp: {WHATSAPP_DISPLAY_NUMBER}
                 </Button>
               </a>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/">
-                <Button variant="outline" className="gap-2 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link to="/" className="flex-1">
+                <Button 
+                  variant="outline" 
+                  className="w-full h-12 gap-2 border-foreground text-foreground hover:bg-foreground hover:text-background font-medium rounded-md"
+                >
                   <Home className="h-4 w-4" />
                   Back to Home
                 </Button>
               </Link>
-              <Link to="/#products">
-                <Button variant="gold" className="gap-2 w-full sm:w-auto">
+              <Link to="/#products" className="flex-1">
+                <Button 
+                  className="w-full h-12 gap-2 bg-foreground hover:bg-foreground/90 text-background font-medium rounded-md"
+                >
                   <ShoppingBag className="h-4 w-4" />
                   Continue Shopping
                 </Button>
@@ -106,11 +201,42 @@ const OrderConfirmation = () => {
             </div>
 
             {/* COD Notice */}
-            <div className="mt-8 rounded-xl bg-secondary/50 p-4">
+            <div className="mt-6 rounded-lg border border-border bg-secondary/30 p-4 text-center">
               <p className="text-sm text-muted-foreground">
-                💵 <strong>Cash on Delivery</strong> - Pay when you receive your order
+                <span className="font-medium text-foreground">Cash on Delivery</span> — Pay when you receive your order
               </p>
             </div>
+
+            {/* What Happens Next */}
+            <div className="mt-6 rounded-lg border border-border bg-background p-5">
+              <h2 className="text-sm font-medium text-muted-foreground mb-4 uppercase tracking-wide">
+                What Happens Next?
+              </h2>
+              <div className="space-y-4">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-medium">1</div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Order Processing</p>
+                    <p className="text-xs text-muted-foreground">We're preparing your order for shipment</p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-medium">2</div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Confirmation Call</p>
+                    <p className="text-xs text-muted-foreground">Our team will contact you to confirm your order</p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-foreground text-background flex items-center justify-center text-xs font-medium">3</div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Fast Delivery</p>
+                    <p className="text-xs text-muted-foreground">Receive your jersey within 2-5 business days</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </main>
 
