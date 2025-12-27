@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { 
   Package, Calendar, CreditCard, User, Phone, MapPin, 
-  Home, Printer, CheckCircle, ArrowLeft 
+  Home, Download, CheckCircle, ArrowLeft, Loader2 
 } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface OrderDetails {
   name: string;
@@ -25,7 +28,10 @@ interface OrderDetails {
 const ReceiptPage = () => {
   const { id } = useParams();
   const location = useLocation();
+  const { toast } = useToast();
+  const receiptRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
 
   // Get order details from navigation state or simulate loading
@@ -51,13 +57,45 @@ const ReceiptPage = () => {
     minute: '2-digit'
   });
 
-  const handlePrint = () => {
-    window.print();
-  };
-
-  const handleDownload = () => {
-    // Trigger print dialog which allows saving as PDF
-    window.print();
+  const handleDownloadPDF = async () => {
+    if (!receiptRef.current || !orderDetails) return;
+    
+    setIsDownloading(true);
+    
+    try {
+      const canvas = await html2canvas(receiptRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`JerseyHub-Receipt-${id}.pdf`);
+      
+      toast({
+        title: 'Receipt Downloaded',
+        description: 'Your receipt has been saved as a PDF.',
+      });
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      toast({
+        title: 'Download Failed',
+        description: 'Could not generate PDF. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   // Loading Skeleton UI
@@ -187,7 +225,7 @@ const ReceiptPage = () => {
         </div>
 
         <main className="container py-8 md:py-12">
-          <div className="mx-auto max-w-2xl animate-fade-in">
+          <div ref={receiptRef} className="mx-auto max-w-2xl animate-fade-in bg-white p-6 rounded-lg">
             
             {/* Back Button - Hidden on Print */}
             <div className="mb-6 print:hidden">
@@ -341,11 +379,21 @@ const ReceiptPage = () => {
                 </Button>
               </Link>
               <Button 
-                onClick={handleDownload}
-                className="flex-1 h-12 gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all active:scale-[0.98]"
+                onClick={handleDownloadPDF}
+                disabled={isDownloading}
+                className="flex-1 h-12 gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all active:scale-[0.98] disabled:opacity-70"
               >
-                <Printer className="h-4 w-4" />
-                Download / Print Receipt
+                {isDownloading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Generating PDF...
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-4 w-4" />
+                    Download PDF
+                  </>
+                )}
               </Button>
             </div>
 
