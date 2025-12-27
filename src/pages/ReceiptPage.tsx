@@ -55,6 +55,11 @@ const ReceiptPage = () => {
     window.print();
   };
 
+  const handleDownload = () => {
+    // Trigger print dialog which allows saving as PDF
+    window.print();
+  };
+
   // Loading Skeleton UI
   if (isLoading) {
     return (
@@ -336,11 +341,11 @@ const ReceiptPage = () => {
                 </Button>
               </Link>
               <Button 
-                onClick={handlePrint}
-                className="flex-1 h-12 gap-2 bg-foreground hover:bg-foreground/90 text-background font-medium rounded-md"
+                onClick={handleDownload}
+                className="flex-1 h-12 gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all active:scale-[0.98]"
               >
                 <Printer className="h-4 w-4" />
-                Print Receipt
+                Download / Print Receipt
               </Button>
             </div>
 

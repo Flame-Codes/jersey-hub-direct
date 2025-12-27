@@ -140,13 +140,14 @@ const OrderConfirmation = () => {
                   <p className="text-muted-foreground mb-3">
                     Thank you for your purchase. Your order has been received.
                   </p>
-                  {/* Track Order Link - Blue text with hover underline */}
+                  {/* Track Order Button - Green Theme */}
                   <Link 
                     to={`/receipt/${orderId}`}
                     state={{ orderDetails }}
-                    className="inline-flex items-center gap-1 text-blue-600 hover:underline font-medium text-sm"
                   >
-                    Track your order here &gt;&gt;
+                    <Button className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg px-6 py-2 h-auto gap-2 transition-all active:scale-[0.98]">
+                      Track your order here &gt;&gt;
+                    </Button>
                   </Link>
                 </div>
 
