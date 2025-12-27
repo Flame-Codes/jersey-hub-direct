@@ -176,13 +176,13 @@ const ProductPage = () => {
         />
 
         {/* Breadcrumb */}
-        <div className="container py-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link to="/" className="hover:text-primary transition-colors">Home</Link>
+        <div className="container py-3 border-b border-border">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
             <span>/</span>
             <Link 
               to={`/category/${encodeURIComponent(product.category)}`} 
-              className="hover:text-primary transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               {product.category}
             </Link>
@@ -192,11 +192,11 @@ const ProductPage = () => {
         </div>
 
         {/* Product Section */}
-        <main className="container pb-32 md:pb-16">
+        <main className="container py-6 pb-32 md:pb-16">
           <div className="grid gap-8 lg:grid-cols-2">
             {/* Image Gallery */}
-            <div className="space-y-4 animate-slide-up">
-              <div className="relative aspect-square overflow-hidden rounded-2xl bg-secondary">
+            <div className="space-y-3">
+              <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
                 <img
                   src={images[currentImageIndex]}
                   alt={product.name}
@@ -209,9 +209,9 @@ const ProductPage = () => {
                 )}
 
                 {!product.stock && (
-                  <Badge variant="destructive" className="absolute right-4 top-4">
-                    Out of Stock
-                  </Badge>
+                  <div className="absolute inset-0 flex items-center justify-center bg-background/90">
+                    <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Out of Stock</span>
+                  </div>
                 )}
 
                 {images.length > 1 && (
@@ -219,16 +219,16 @@ const ProductPage = () => {
                     <button
                       type="button"
                       onClick={() => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-background text-foreground"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 transition-colors hover:bg-background text-foreground"
                     >
-                      <ChevronLeft className="h-5 w-5" strokeWidth={2} />
+                      <ChevronLeft className="h-4 w-4" strokeWidth={1.5} />
                     </button>
                     <button
                       type="button"
                       onClick={() => setCurrentImageIndex((prev) => (prev + 1) % images.length)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 shadow-lg backdrop-blur-sm transition-colors hover:bg-background text-foreground"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-background/90 p-2 transition-colors hover:bg-background text-foreground"
                     >
-                      <ChevronRight className="h-5 w-5" strokeWidth={2} />
+                      <ChevronRight className="h-4 w-4" strokeWidth={1.5} />
                     </button>
                   </>
                 )}
@@ -242,10 +242,10 @@ const ProductPage = () => {
                       type="button"
                       onClick={() => setCurrentImageIndex(index)}
                       className={cn(
-                        "h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all",
+                        "h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg border transition-all",
                         currentImageIndex === index
-                          ? "border-primary ring-2 ring-primary/20"
-                          : "border-transparent opacity-60 hover:opacity-100"
+                          ? "border-foreground"
+                          : "border-border opacity-60 hover:opacity-100"
                       )}
                     >
                       <img src={img} alt="" className="h-full w-full object-cover" />

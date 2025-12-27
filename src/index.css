@@ -6,49 +6,50 @@
 
 @layer base {
   :root {
+    /* Premium Black & White Theme */
     --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
+    --foreground: 0 0% 7%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
+    --card-foreground: 0 0% 7%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --popover-foreground: 0 0% 7%;
 
-    --primary: 0 0% 9%;
+    --primary: 0 0% 7%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 0 0% 97%;
+    --secondary-foreground: 0 0% 7%;
 
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 0 0% 94%;
+    --accent-foreground: 0 0% 7%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 9%;
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 0 0% 7%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Custom colors */
+    /* Custom colors - Refined */
     --gold: 45 100% 51%;
     --gold-light: 45 100% 65%;
     --gold-dark: 45 100% 40%;
     --success: 142 76% 36%;
     --whatsapp: 142 70% 45%;
-    --discount: 0 84% 60%;
+    --discount: 0 65% 50%;
 
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    /* Shadows - Softer */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+    --shadow-md: 0 2px 8px -2px rgb(0 0 0 / 0.06);
+    --shadow-lg: 0 4px 16px -4px rgb(0 0 0 / 0.08);
+    --shadow-xl: 0 8px 24px -6px rgb(0 0 0 / 0.1);
 
     /* Font families */
     --font-display: 'Poppins', sans-serif;
@@ -56,22 +57,22 @@
   }
 
   .dark {
-    --background: 222 47% 11%;
+    --background: 0 0% 4%;
     --foreground: 0 0% 98%;
-    --card: 223 47% 14%;
+    --card: 0 0% 7%;
     --card-foreground: 0 0% 98%;
-    --popover: 223 47% 14%;
+    --popover: 0 0% 7%;
     --popover-foreground: 0 0% 98%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 17%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 0 0% 15%;
     --accent-foreground: 0 0% 98%;
-    --border: 217 33% 22%;
-    --input: 217 33% 22%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
   }
 }
 
@@ -99,19 +100,19 @@
 }
 
 @layer components {
+  /* Premium Card Styles */
   .card-elevated {
-    @apply bg-card rounded-2xl border border-border/50;
-    box-shadow: var(--shadow-lg);
-  }
-
-  .card-interactive {
-    @apply bg-card rounded-2xl border border-border/50 transition-all duration-300 ease-out;
+    @apply bg-card rounded-lg border border-border;
     box-shadow: var(--shadow-md);
   }
 
+  .card-interactive {
+    @apply bg-card rounded-lg border border-border transition-all duration-200 ease-out;
+    box-shadow: var(--shadow-sm);
+  }
+
   .card-interactive:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-lg);
   }
 
   /* Ensure buttons inside cards are always clickable */
@@ -122,21 +123,35 @@
     pointer-events: auto;
   }
 
+  /* Premium Button Styles */
   .btn-primary {
-    @apply bg-primary text-primary-foreground font-semibold rounded-xl px-6 py-3 transition-all duration-200;
-    box-shadow: 0 4px 14px 0 hsl(var(--primary) / 0.3);
+    @apply bg-foreground text-background font-medium rounded-full px-6 py-3 transition-all duration-200;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     user-select: none;
   }
 
   .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px 0 hsl(var(--primary) / 0.4);
+    @apply opacity-80;
   }
 
   .btn-primary:active {
-    transform: translateY(0) scale(0.98);
+    transform: scale(0.98);
+  }
+
+  .btn-outline {
+    @apply bg-background text-foreground font-medium rounded-full px-6 py-3 border border-foreground transition-all duration-200;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  .btn-outline:hover {
+    @apply bg-secondary;
+  }
+
+  .btn-outline:active {
+    transform: scale(0.98);
   }
   
   /* Touch-friendly button base styles */
@@ -146,15 +161,15 @@
     touch-action: manipulation;
   }
 
+  /* Refined Badge Styles */
   .badge-discount {
-    @apply absolute top-3 left-3 px-3 py-1 text-xs font-bold rounded-full;
-    background: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 50%));
+    @apply absolute top-2 left-2 px-2.5 py-1 text-[10px] font-semibold rounded-full;
+    background: hsl(var(--discount));
     color: white;
-    box-shadow: 0 2px 8px hsl(0 84% 60% / 0.3);
   }
 
   .badge-stock {
-    @apply px-3 py-1 text-xs font-semibold rounded-full;
+    @apply px-2.5 py-1 text-xs font-medium rounded-full;
   }
 
   .badge-stock.in-stock {
@@ -165,12 +180,13 @@
     @apply bg-destructive/10 text-destructive;
   }
 
+  /* Premium Input Styles */
   .input-modern {
-    @apply w-full rounded-xl border-2 border-border bg-secondary/30 px-4 py-3 text-foreground transition-all duration-200;
+    @apply w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground transition-all duration-200;
   }
 
   .input-modern:focus {
-    @apply border-primary bg-background outline-none ring-4 ring-primary/10;
+    @apply border-foreground outline-none;
   }
 
   .input-modern::placeholder {
@@ -191,15 +207,15 @@
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
 
-  /* Glass morphism effect */
+  /* Glass morphism effect - cleaner */
   .glass {
-    @apply bg-background/80 backdrop-blur-lg border-t border-border/50;
+    @apply bg-background/95 backdrop-blur-md border-t border-border;
   }
 
   /* Sticky mobile bar */
   .sticky-bottom-bar {
     @apply fixed bottom-0 left-0 right-0 z-40 glass safe-bottom;
-    box-shadow: 0 -4px 20px rgb(0 0 0 / 0.1);
+    box-shadow: 0 -1px 0 hsl(var(--border));
   }
 
   /* Gradient for gold banner */
@@ -207,7 +223,7 @@
     background: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--gold-dark)) 100%);
   }
 
-  /* Explicit icon styling for visibility */
+  /* Icon visibility */
   .icon-dark {
     @apply text-foreground;
     stroke: currentColor;

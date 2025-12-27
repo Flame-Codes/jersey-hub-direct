@@ -46,22 +46,22 @@ const ProductCard = ({ product, onQuickView, onOrder }: ProductCardProps) => {
 
   return (
     <article className="group card-interactive overflow-hidden flex flex-col">
-      {/* Image Section - Clickable to product page */}
+      {/* Image Section */}
       <div 
-        className="relative aspect-[3/4] overflow-hidden bg-secondary cursor-pointer"
+        className="relative aspect-[3/4] overflow-hidden bg-muted cursor-pointer"
         onClick={handleCardClick}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && handleCardClick(e as any)}
       >
         {product.discount > 0 && (
-          <div className="absolute top-3 left-3 z-20 rounded-full bg-[hsl(var(--discount))] px-3 py-1 text-xs font-semibold text-white">
-            Save {product.discount}%
+          <div className="badge-discount z-20">
+            -{product.discount}%
           </div>
         )}
         {!product.stock && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/80 pointer-events-none">
-            <span className="rounded-full bg-destructive px-4 py-2 text-sm font-bold text-white">Out of Stock</span>
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/90 pointer-events-none">
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Out of Stock</span>
           </div>
         )}
         <img
@@ -70,47 +70,48 @@ const ProductCard = ({ product, onQuickView, onOrder }: ProductCardProps) => {
           loading="lazy"
           onLoad={() => setImageLoaded(true)}
           className={cn(
-            'h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 pointer-events-none',
+            'h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 pointer-events-none',
             imageLoaded ? 'opacity-100' : 'opacity-0'
           )}
         />
         {!imageLoaded && <div className="absolute inset-0 animate-pulse bg-muted pointer-events-none" />}
-        
       </div>
       
-      {/* Product Info Section */}
-      <div className="p-4 flex-1 flex flex-col">
-        <p className="text-xs font-medium text-primary uppercase tracking-wide">{product.category}</p>
+      {/* Product Info */}
+      <div className="p-3 flex-1 flex flex-col">
+        <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{product.category}</p>
         <h3 
-          className="mt-1.5 font-semibold text-foreground line-clamp-2 text-sm group-hover:text-primary transition-colors cursor-pointer"
+          className="mt-1 font-medium text-foreground line-clamp-2 text-sm leading-snug cursor-pointer hover:underline"
           onClick={handleCardClick}
         >
           {product.name}
         </h3>
-        <div className="mt-2 flex items-baseline gap-2 flex-wrap">
-          <span className="text-base font-bold text-foreground">BDT {discountedPrice.toLocaleString()}</span>
-          {product.discount > 0 && <span className="text-sm text-muted-foreground line-through">BDT {product.price.toLocaleString()}</span>}
+        <div className="mt-1.5 flex items-baseline gap-2">
+          <span className="text-sm font-semibold text-foreground">৳{discountedPrice.toLocaleString()}</span>
+          {product.discount > 0 && (
+            <span className="text-xs text-muted-foreground line-through">৳{product.price.toLocaleString()}</span>
+          )}
         </div>
         
-        {/* Action Buttons - Black/White Theme */}
-        <div className="mt-4 flex flex-col gap-2 relative z-10">
+        {/* Action Buttons - Premium Style */}
+        <div className="mt-3 flex flex-col gap-2 relative z-10">
           <button
             type="button"
             onClick={handleAddToCart}
             disabled={!product.stock}
-            className="w-full flex items-center justify-center gap-2 rounded-full border-2 border-foreground bg-background py-3 text-sm font-bold uppercase tracking-wide text-foreground disabled:opacity-50 active:scale-[0.98] transition-all duration-200 touch-manipulation select-none hover:bg-secondary"
+            className="w-full flex items-center justify-center rounded-full border border-foreground bg-background py-2.5 text-xs font-medium uppercase tracking-wide text-foreground disabled:opacity-40 active:scale-[0.98] transition-all duration-150 touch-manipulation select-none hover:bg-muted"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            ADD TO CART
+            Add to Cart
           </button>
           <button
             type="button"
             onClick={handleOrder}
             disabled={!product.stock}
-            className="w-full flex items-center justify-center gap-2 rounded-full bg-foreground py-3 text-sm font-bold uppercase tracking-wide text-background disabled:opacity-50 active:scale-[0.98] transition-all duration-200 touch-manipulation select-none hover:bg-foreground/90"
+            className="w-full flex items-center justify-center rounded-full bg-foreground py-2.5 text-xs font-medium uppercase tracking-wide text-background disabled:opacity-40 active:scale-[0.98] transition-all duration-150 touch-manipulation select-none hover:opacity-80"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            BUY NOW
+            Buy Now
           </button>
         </div>
       </div>
